@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo — Salão Michelly</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fbf7f8;
+      --card: #ffffff;
+      --sidebar-bg: #150d0f;
+      --sidebar-hover: rgba(216, 162, 164, 0.12);
+      
+      --primary: #b8787d;
+      --primary-light: #d8a2a4;
+      --primary-soft: rgba(216, 162, 164, 0.15);
+      --primary-dark: #915459;
+      
+      --ink: #221618;
+      --ink-soft: #4d3d40;
+      --muted: #827376;
+      --line: #ede2e4;
+      
+      --success-bg: #edfdf5;
+      --success-text: #15803d;
+      --success-border: #bbf7d0;
+
+      --warning-bg: #fffbeb;
+      --warning-text: #b45309;
+      --warning-border: #fde68a;
+
+      --danger-bg: #fef2f2;
+      --danger-text: #b91c1c;
+      --danger-border: #fecaca;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 20px rgba(34, 22, 24, 0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background: var(--sidebar-bg);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      border-right: 1px solid rgba(216, 162, 164, 0.1);
+    }
+
+    .logo-box {
+      padding: 30px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .logo-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--primary-light);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: #a39598;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
+
+    .nav-menu {
+      padding: 24px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      color: #c9bcbe;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-btn:hover {
+      background: var(--sidebar-hover);
+      color: #fff;
+    }
+
+    .nav-btn.active {
+      background: var(--sidebar-hover);
+      color: var(--primary-light);
+      border-left-color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      color: #7b6d70;
+    }
+
+    .connection-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 999px;
+      margin-top: 6px;
+      color: #d1c4c6;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    /* =========================
+       MAIN CONTENT
+    ========================= */
+    .content {
+      margin-left: 250px;
+      flex: 1;
+      padding: 36px 40px;
+      max-width: 1300px;
+    }
+
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .header-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #faf5f6;
+      border-color: var(--primary-light);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* =========================
+       KPI CARDS
+    ========================= */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .kpi-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* =========================
+       SECTIONS & CARDS
+    ========================= */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    /* Filters Bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+    }
+
+    .pill-btn {
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .pill-btn.active {
+      background: var(--card);
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: #faf6f7;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fdfafb;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid transparent;
+    }
+
+    .bg-pendente {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border-color: var(--warning-border);
+    }
+
+    .bg-confirmado {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .bg-cancelado {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+    }
+
+    .action-select {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      background: #fff;
+      cursor: pointer;
+      color: var(--ink);
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 9px;
+      background: #e7f7ed;
+      color: #128c7e;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .wa-btn:hover {
+      background: #d1f2dc;
+    }
+
+    .btn-danger {
+      background: #fff;
+      color: var(--danger-text);
+      border: 1px solid var(--danger-border);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-bg);
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* =========================
+       LOADER & EMPTY STATES
+    ========================= */
+    #loaderOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--line);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section-tab { display: none; }
+    .section-tab.active { display: block; }
+
+    /* =========================
+       CONFIG MODAL
+    ========================= */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .modal-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+    @media (max-width: 960px) {
+      .sidebar {
+        width: 70px;
+      }
+      .logo-title, .logo-sub, .sidebar-footer, .nav-btn span {
+        display: none;
+      }
+      .logo-box {
+        text-align: center;
+        padding: 20px 10px;
+      }
+      .nav-btn {
+        justify-content: center;
+        padding: 14px 0;
+      }
+      .content {
+        margin-left: 70px;
+        padding: 24px 16px;
+      }
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER OVERLAY -->
+  <div id="loaderOverlay">
+    <div class="spinner"></div>
+    <span style="font-size: 13px; color: var(--muted);" id="loaderMsg">Carregando dados da planilha...</span>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-box">
+      <div class="logo-title">Salão Michelly</div>
+      <div class="logo-sub">Painel Gerencial</div>
+    </div>
+
+    <nav class="nav-menu">
+      <button class="nav-btn active" onclick="switchTab('agendamentos', this)">
+        📅 <span>Agendamentos</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('servicos', this)">
+        ✂️ <span>Serviços</span>
+      </button>
+      <button class="nav-btn" onclick="openConfigModal()">
+        ⚙️ <span>Configurações</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div>Ambiente:</div>
+      <div class="connection-pill" id="envPill">
+        <span class="status-dot"></span>
+        <span id="envLabel">Conectando...</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <div class="top-header">
+      <div>
+        <h1 class="header-title">Visão Geral</h1>
+        <p class="header-sub">Gerenciamento de horários, clientes e catálogo em tempo real.</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn-secondary" onclick="loadData(true)">
+          🔄 <span>Atualizar</span>
+        </button>
+        <a href="https://wa.me/5512981765655" target="_blank" class="btn-primary">
+          💬 <span>WhatsApp Salão</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Agendamentos</div>
+        <div class="kpi-val" id="kpiTotal">0</div>
+        <div class="kpi-sub">Registros na planilha</div>
+      </div>
+      <div class="kpi-card" style="border-left: 4px solid var(--warning-text);">
+        <div class="kpi-label">Pendentes</div>
+        <div class="kpi-val" id="kpiPendentes" style="color: var(--warning-text);">0</div>
+        <div class="kpi-sub">Aguardando resposta</div>
+      </div>
+      <div class="kpi-card" style="border-left: 4px solid var(--success-text);">
+        <div class="kpi-label">Confirmados</div>
+        <div class="kpi-val" id="kpiConfirmados" style="color: var(--success-text);">0</div>
+        <div class="kpi-sub">Prontos para atendimento</div>
+      </div>
+      <div class="kpi-card" style="border-left: 4px solid var(--primary);">
+        <div class="kpi-label">Faturamento Previsto</div>
+        <div class="kpi-val" id="kpiFaturamento" style="color: var(--primary-dark);">R$ 0</div>
+        <div class="kpi-sub">Agendamentos confirmados</div>
+      </div>
+    </div>
+
+    <!-- TAB 1: AGENDAMENTOS -->
+    <div id="agendamentos" class="section-tab active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Agendamentos Recentes</div>
+        </div>
+
+        <div class="controls-bar">
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="🔍 Buscar por cliente, serviço ou telefone..."
+            oninput="filtrarAgendamentos()"
+          >
+
+          <div class="filter-pills">
+            <button class="pill-btn active" onclick="setFiltroStatus('todos', this)">Todos</button>
+            <button class="pill-btn" onclick="setFiltroStatus('Pendente', this)">Pendentes</button>
+            <button class="pill-btn" onclick="setFiltroStatus('Confirmado', this)">Confirmados</button>
+            <button class="pill-btn" onclick="setFiltroStatus('Cancelado', this)">Cancelados</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Cliente</th>
+                <th>WhatsApp</th>
+                <th>Serviço & Valor</th>
+                <th>Pagamento</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-agendamentos">
+              <!-- Renderizado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="emptyAgendamentos" class="empty-state" style="display:none;">
+          Nenhum agendamento encontrado para os filtros selecionados.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: SERVIÇOS -->
+    <div id="servicos" class="section-tab">
+      <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px;">
+        
+        <!-- LISTA DE SERVIÇOS -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Catálogo de Serviços</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Preço</th>
+                  <th>Duração</th>
+                  <th style="text-align: right;">Remover</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-servicos">
+                <!-- Renderizado via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADICIONAR NOVO SERVIÇO -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Adicionar Serviço</div>
+          </div>
+          <form onsubmit="adicionarServico(event)">
+            <div class="form-group">
+              <label>ID Único (ex: luzes)</label>
+              <input type="text" id="svc-id" placeholder="Sem espaços nem acentos" required>
+            </div>
+            <div class="form-group">
+              <label>Nome do Serviço</label>
+              <input type="text" id="svc-nome" placeholder="Ex: Mechas e Luzes" required>
+            </div>
+            <div class="form-group">
+              <label>Preço (R$)</label>
+              <input type="number" id="svc-preco" placeholder="180" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label>Duração Estimada</label>
+              <input type="text" id="svc-duracao" placeholder="Ex: 1h30" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+              + Salvar Serviço
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE CONFIGURAÇÕES DE API -->
+  <div id="configModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>Configurações de Conexão</h3>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 18px;">
+        Insira a URL gerada na implantação do Google Apps Script (Executável do Web App):
+      </p>
+
+      <div class="form-group">
+        <label>URL do Web App Google</label>
+        <input type="url" id="cfg-web-app-url" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn-secondary" onclick="closeConfigModal()">Cancelar</button>
+        <button type="button" class="btn-primary" onclick="salvarConfigModal()">Salvar & Testar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       CONFIGURAÇÃO & CLIENTE API HÍBRIDO (APPS SCRIPT OU FETCH)
+    ========================================================= */
+    const DEFAULT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxxtxRzc-SKAqyEO9unC7iqBIjzMWbt3ioMEQiYFSR9cmMqjm5z0RWF4qiJAqrviD4cbg/exec";
+    
+    // Obtém URL gravada no navegador ou usa a padrão
+    let currentWebAppUrl = localStorage.getItem("MICHELLY_WEB_APP_URL") || DEFAULT_WEB_APP_URL;
+
+    // Detecta se está rodando dentro do iframe do Google Apps Script
+    const isRunningInsideGoogleScript = typeof google !== 'undefined' && google.script && google.script.run;
+
+    const apiClient = {
+      async getDashboardData() {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .getDashboardData();
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl + "?action=get_dashboard");
+          const data = await response.json();
+          if (data.status === "error") throw new Error(data.message);
+          return data;
+        }
+      },
+
+      async atualizarStatus(rowIdx, novoStatus) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .atualizarStatus(rowIdx, novoStatus);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "update_status", rowIdx: rowIdx, status: novoStatus })
+          });
+          return await response.json();
+        }
+      },
+
+      async adicionarServico(id, nome, preco, duracao) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .adicionarServico(id, nome, preco, duracao);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "add_service", id: id, name: nome, price: preco, duration: duracao })
+          });
+          return await response.json();
+        }
+      },
+
+      async excluirServico(rowIdx) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .excluirServico(rowIdx);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "delete_service", rowIdx: rowIdx })
+          });
+          return await response.json();
+        }
+      }
+    };
+
+    /* =========================================================
+       ESTADO LOCAL & FILTROS
+    ========================================================= */
+    let cachedData = { agendamentos: [], servicos: [] };
+    let filtroStatusAtivo = 'todos';
+
+    const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+    function setLoader(show, msg = "Carregando...") {
+      const el = document.getElementById("loaderOverlay");
+      const msgEl = document.getElementById("loaderMsg");
+      if (msgEl) msgEl.textContent = msg;
+      el.style.display = show ? "flex" : "none";
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function updateEnvPill() {
+      const envLabel = document.getElementById("envLabel");
+      if (isRunningInsideGoogleScript) {
+        envLabel.textContent = "Google Apps Script Nativo";
+      } else {
+        envLabel.textContent = "API Web (REST)";
+      }
+    }
+
+    /* =========================================================
+       CARREGAR DADOS
+    ========================================================= */
+    async function loadData(showSpinner = false) {
+      if (showSpinner) setLoader(true, "Atualizando dados da planilha...");
+      try {
+        const data = await apiClient.getDashboardData();
+        cachedData = data;
+        renderDashboard();
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+        alert("Erro ao conectar à planilha do Google: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    function renderDashboard() {
+      // 1. Atualizar Métricas / KPIs
+      const ags = cachedData.agendamentos || [];
+      const total = ags.length;
+      const pendentes = ags.filter(a => (a.status || '').toLowerCase() === 'pendente').length;
+      const confirmados = ags.filter(a => (a.status || '').toLowerCase() === 'confirmado').length;
+      
+      let faturamento = 0;
+      ags.filter(a => (a.status || '').toLowerCase() === 'confirmado').forEach(a => {
+        const num = parseFloat(String(a.valor).replace(/[^\d,-]/g, '').replace(',', '.'));
+        if (!isNaN(num)) faturamento += num;
+      });
+
+      document.getElementById("kpiTotal").textContent = total;
+      document.getElementById("kpiPendentes").textContent = pendentes;
+      document.getElementById("kpiConfirmados").textContent = confirmados;
+      document.getElementById("kpiFaturamento").textContent = BRL.format(faturamento);
+
+      // 2. Renderizar Agendamentos e Serviços
+      filtrarAgendamentos();
+      renderServicos();
+    }
+
+    /* =========================================================
+       RENDERIZAÇÃO DE AGENDAMENTOS & FILTROS
+    ========================================================= */
+    function setFiltroStatus(status, btn) {
+      filtroStatusAtivo = status;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filtrarAgendamentos();
+    }
+
+    function filtrarAgendamentos() {
+      const query = (document.getElementById("searchInput").value || "").toLowerCase();
+      let ags = cachedData.agendamentos || [];
+
+      if (filtroStatusAtivo !== 'todos') {
+        ags = ags.filter(a => (a.status || '').toLowerCase() === filtroStatusAtivo.toLowerCase());
+      }
+
+      if (query) {
+        ags = ags.filter(a => 
+          (a.cliente || '').toLowerCase().includes(query) ||
+          (a.servico || '').toLowerCase().includes(query) ||
+          (a.telefone || '').includes(query) ||
+          (a.dataAgendada || '').toLowerCase().includes(query)
+        );
+      }
+
+      const tbody = document.getElementById("tbody-agendamentos");
+      const emptyMsg = document.getElementById("emptyAgendamentos");
+
+      if (ags.length === 0) {
+        tbody.innerHTML = "";
+        emptyMsg.style.display = "block";
+        return;
+      }
+
+      emptyMsg.style.display = "none";
+      tbody.innerHTML = ags.map(ag => {
+        const cleanPhone = String(ag.telefone).replace(/\D/g, '');
+        const waNumber = cleanPhone.startsWith('55') ? cleanPhone : ('55' + cleanPhone);
+        
+        // Mensagem pré-formatada para confirmar com a cliente via WhatsApp
+        const waMsgConfirmacao = encodeURIComponent(
+          `Olá, ${ag.cliente}! ✨ Passando para confirmar seu horário no Salão Michelly para *${ag.servico}* no dia *${ag.dataAgendada}* às *${ag.horario}*. Esperamos você com muito carinho! 💕`
+        );
+        const waUrl = `https://wa.me/${waNumber}?text=${waMsgConfirmacao}`;
+
+        const statusClass = (ag.status || 'pendente').toLowerCase();
+
+        return `
+          <tr>
+            <td>
+              <strong>${ag.dataAgendada || 'A combinar'}</strong><br>
+              <span style="color: var(--muted); font-size: 12px;">⏰ ${ag.horario || '--:--'}</span>
+            </td>
+            <td>
+              <strong>${ag.cliente}</strong><br>
+              <small style="color: var(--muted);">${ag.id || ''}</small>
+            </td>
+            <td>
+              <a href="tel:${cleanPhone}" style="color: var(--ink); text-decoration: none;">${ag.telefone}</a><br>
+              <a href="${waUrl}" target="_blank" class="wa-btn" style="margin-top: 4px;">
+                💬 WhatsApp
+              </a>
+            </td>
+            <td>
+              <strong>${ag.servico}</strong><br>
+              <span style="color: var(--primary); font-weight: 600;">${ag.valor || ''}</span>
+            </td>
+            <td>
+              ${ag.pagamento || 'No Salão'}
+              ${ag.notas ? `<br><small style="color: var(--muted);">Obs: ${ag.notas}</small>` : ''}
+            </td>
+            <td>
+              <span class="badge bg-${statusClass}">${ag.status || 'Pendente'}</span>
+            </td>
+            <td>
+              <select class="action-select" onchange="alterarStatus(${ag.rowIdx}, this.value)">
+                <option value="" disabled selected>Alterar status...</option>
+                <option value="Confirmado">✅ Confirmar</option>
+                <option value="Pendente">⏳ Pendente</option>
+                <option value="Cancelado">❌ Cancelar</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    /* =========================================================
+       AÇÕES DE AGENDAMENTO E SERVIÇOS
+    ========================================================= */
+    async function alterarStatus(rowIdx, novoStatus) {
+      if (!novoStatus) return;
+      setLoader(true, `Atualizando status para ${novoStatus}...`);
+      try {
+        await apiClient.atualizarStatus(rowIdx, novoStatus);
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao alterar status: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    function renderServicos() {
+      const svcs = cachedData.servicos || [];
+      const tbody = document.getElementById("tbody-servicos");
+
+      if (svcs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--muted);">Nenhum serviço cadastrado.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = svcs.map(sv => `
+        <tr>
+          <td style="color: var(--muted); font-family: monospace;">${sv.id}</td>
+          <td><strong>${sv.nome}</strong></td>
+          <td>${BRL.format(sv.preco)}</td>
+          <td>${sv.duracao}</td>
+          <td style="text-align: right;">
+            <button class="btn-danger" onclick="removerServico(${sv.rowIdx})">Excluir</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function adicionarServico(event) {
+      event.preventDefault();
+      const id = document.getElementById("svc-id").value.trim();
+      const nome = document.getElementById("svc-nome").value.trim();
+      const preco = document.getElementById("svc-preco").value.trim();
+      const duracao = document.getElementById("svc-duracao").value.trim();
+
+      if (!id || !nome || !preco) {
+        return alert("Por favor preencha ID, Nome e Preço!");
+      }
+
+      setLoader(true, "Adicionando serviço...");
+      try {
+        await apiClient.adicionarServico(id, nome, preco, duracao);
+        document.getElementById("svc-id").value = "";
+        document.getElementById("svc-nome").value = "";
+        document.getElementById("svc-preco").value = "";
+        document.getElementById("svc-duracao").value = "";
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao salvar serviço: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    async function removerServico(rowIdx) {
+      if (!confirm("Tem certeza que deseja apagar este serviço do catálogo?")) return;
+
+      setLoader(true, "Removendo serviço...");
+      try {
+        await apiClient.excluirServico(rowIdx);
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao remover serviço: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    /* =========================================================
+       MODAL DE CONFIGURAÇÃO DE URL
+    ========================================================= */
+    function openConfigModal() {
+      document.getElementById("cfg-web-app-url").value = currentWebAppUrl;
+      document.getElementById("configModal").style.display = "flex";
+    }
+
+    function closeConfigModal() {
+      document.getElementById("configModal").style.display = "none";
+    }
+
+    function salvarConfigModal() {
+      const novaUrl = document.getElementById("cfg-web-app-url").value.trim();
+      if (!novaUrl) return alert("Insira uma URL válida.");
+
+      currentWebAppUrl = novaUrl;
+      localStorage.setItem("MICHELLY_WEB_APP_URL", novaUrl);
+      closeConfigModal();
+      loadData(true);
+    }
+
+    /* =========================================================
+       INICIALIZAÇÃO
+    ========================================================= */
+    window.addEventListener("DOMContentLoaded", () => {
+      updateEnvPill();
+      loadData(true);
+
+      // Auto-atualização suave a cada 60 segundos
+      setInterval(() => {
+        loadData(false);
+      }, 60000);
+    });
+  </script>
+</body>
+</html>
