@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#150d0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Painel Administrativo — Salão Michelly</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,12 +48,107 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
       display: flex;
+    }
+
+    /* =========================
+       LOGIN OVERLAY
+    ========================= */
+    #loginOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 20%, rgba(216, 162, 164, 0.12), transparent 45%), #120b0d;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: #1c1215;
+      border: 1px solid rgba(216, 162, 164, 0.25);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    }
+
+    .login-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 4px;
+    }
+
+    .login-subtitle {
+      color: #9d8d90;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 28px;
+    }
+
+    .login-error {
+      display: none;
+      background: rgba(220, 38, 38, 0.15);
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      color: #fca5a5;
+      font-size: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(216, 162, 164, 0.3);
+      background: #130a0c;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 18px;
+      box-sizing: border-box;
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(216, 162, 164, 0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: #160d0e;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .login-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
     }
 
     /* =========================
@@ -133,6 +231,9 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       font-size: 11px;
       color: #7b6d70;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .connection-pill {
@@ -142,8 +243,8 @@
       padding: 4px 8px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 999px;
-      margin-top: 6px;
       color: #d1c4c6;
+      width: fit-content;
     }
 
     .status-dot {
@@ -151,6 +252,26 @@
       height: 8px;
       border-radius: 50%;
       background: #22c55e;
+    }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #bfaeae;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
     }
 
     /* =========================
@@ -183,12 +304,15 @@
       color: var(--muted);
       font-size: 13px;
       margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .btn-secondary {
@@ -383,6 +507,15 @@
       background: #fdfafb;
     }
 
+    tr.highlight-new {
+      animation: highlightRow 3s ease forwards;
+    }
+
+    @keyframes highlightRow {
+      0% { background: #fef08a; }
+      100% { background: transparent; }
+    }
+
     .badge {
       display: inline-block;
       padding: 4px 10px;
@@ -422,22 +555,24 @@
       color: var(--ink);
     }
 
-    .wa-btn {
+    .btn-edit-sm {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 9px;
-      background: #e7f7ed;
-      color: #128c7e;
+      gap: 4px;
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid var(--line);
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 11px;
+      cursor: pointer;
+      font-size: 12px;
       font-weight: 600;
-      text-decoration: none;
       transition: 0.2s;
     }
 
-    .wa-btn:hover {
-      background: #d1f2dc;
+    .btn-edit-sm:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary-light);
     }
 
     .btn-danger {
@@ -486,6 +621,87 @@
     }
 
     /* =========================
+       NOTIFICAÇÕES FLUTUANTES (TOAST POPUPS)
+    ========================= */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .booking-toast {
+      pointer-events: auto;
+      background: #ffffff;
+      border: 1px solid var(--primary-light);
+      border-left: 5px solid var(--primary);
+      border-radius: 14px;
+      padding: 16px 18px;
+      width: 360px;
+      box-shadow: 0 12px 36px rgba(22, 13, 14, 0.18);
+      animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      position: relative;
+    }
+
+    @keyframes toastSlideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-icon-wrap {
+      font-size: 22px;
+      background: rgba(216, 162, 164, 0.2);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toast-details {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .toast-close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .toast-close-btn:hover {
+      color: var(--ink);
+    }
+
+    /* =========================
        LOADER & EMPTY STATES
     ========================= */
     #loaderOverlay {
@@ -523,26 +739,33 @@
     .section-tab.active { display: block; }
 
     /* =========================
-       CONFIG MODAL
+       MODALS
     ========================= */
     .modal-backdrop {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
       z-index: 2000;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-box {
       background: #fff;
       border-radius: var(--radius);
-      padding: 28px;
+      padding: 26px 22px;
       max-width: 480px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      box-sizing: border-box;
+      margin: auto;
     }
 
     .modal-box h3 {
@@ -551,45 +774,347 @@
       margin-bottom: 12px;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
-    @media (max-width: 960px) {
-      .sidebar {
-        width: 70px;
-      }
-      .logo-title, .logo-sub, .sidebar-footer, .nav-btn span {
-        display: none;
-      }
-      .logo-box {
-        text-align: center;
-        padding: 20px 10px;
-      }
-      .nav-btn {
-        justify-content: center;
-        padding: 14px 0;
-      }
-      .content {
-        margin-left: 70px;
-        padding: 24px 16px;
-      }
-      .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .mobile-brand-bar {
+      display: none;
     }
 
-    @media (max-width: 600px) {
-      .kpi-grid {
-        grid-template-columns: 1fr;
+    .btn-logout-mobile {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--danger-text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* =========================
+       RESPONSIVE & MOBILE-FIRST
+    ========================= */
+    @media (max-width: 768px) {
+      /* Remove zoom automático do iOS ao focar em inputs */
+      input, select, textarea {
+        font-size: 16px !important;
       }
+
+      button, a, input, select {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Layout body e content no celular */
+      body {
+        display: block !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        overflow-x: hidden !important;
+      }
+
+      .content {
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 14px 14px calc(80px + env(safe-area-inset-bottom, 14px)) !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Barra de navegação inferior no celular (estilo app móvel nativo) */
+      .sidebar {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+        flex-direction: row !important;
+        border-top: 1px solid rgba(216, 162, 164, 0.25) !important;
+        border-right: none !important;
+        background: rgba(21, 13, 15, 0.98) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        z-index: 9999 !important;
+        padding: 0 4px env(safe-area-inset-bottom, 0px) !important;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+      }
+
+      .logo-box, .sidebar-footer {
+        display: none !important;
+      }
+
+      .nav-menu {
+        flex-direction: row !important;
+        width: 100% !important;
+        padding: 0 !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        gap: 0 !important;
+      }
+
+      .nav-btn {
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 3px !important;
+        padding: 6px 2px !important;
+        border-left: none !important;
+        border-top: 3px solid transparent !important;
+        width: 25% !important;
+        font-size: 10px !important;
+        color: #a39598 !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+      }
+
+      .nav-btn.active {
+        border-top-color: var(--primary-light) !important;
+        background: transparent !important;
+        color: var(--primary-light) !important;
+        font-weight: 700 !important;
+      }
+
+      .nav-icon {
+        font-size: 19px !important;
+        line-height: 1 !important;
+      }
+
+      .nav-btn span {
+        display: block !important;
+        font-size: 9.5px !important;
+        letter-spacing: -0.3px;
+        line-height: 1.1;
+      }
+
+      /* Top Bar no Celular */
+      .mobile-brand-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .btn-logout-mobile {
+        display: inline-flex;
+      }
+
       .top-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .header-title {
+        font-size: 28px !important;
+      }
+
+      .top-actions {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+
+      .top-actions .btn-block-action {
+        grid-column: span 2 !important;
+      }
+
+      .top-actions button {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+
+      /* KPIs em 2 colunas organizadas */
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+      }
+
+      .kpi-card {
+        padding: 14px 12px !important;
+      }
+
+      .kpi-val {
+        font-size: 20px !important;
+      }
+
+      /* Cards com espaçamento confortável */
+      .card {
+        padding: 18px 14px !important;
+        border-radius: var(--radius) !important;
+        box-sizing: border-box !important;
+      }
+
+      .card-title {
+        font-size: 20px !important;
+      }
+
+      /* Todos os grids de formulários viram 1 coluna para máximo conforto no toque */
+      #horarios div[style*="grid-template-columns"],
+      #servicos div[style*="grid-template-columns"],
+      div[style*="grid-template-columns: 1fr 1fr"],
+      div[style*="grid-template-columns: 1fr 340px"],
+      div[style*="grid-template-columns: 1.2fr 1fr 1.2fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+
+      /* Tabelas e controles */
+      .controls-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .filter-pills {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        display: flex;
+        gap: 6px;
+      }
+
+      .pill-btn {
+        white-space: nowrap;
+        padding: 6px 12px;
+      }
+
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        min-width: 620px;
+      }
+
+      /* Modais mobile */
+      .modal-box {
+        width: 100% !important;
+        max-width: 440px !important;
+        padding: 22px 18px !important;
+      }
+
+      #loginOverlay {
+        padding: 16px !important;
+      }
+
+      .login-card {
+        padding: 30px 20px !important;
+        border-radius: 18px !important;
+      }
+
+      .login-logo {
+        font-size: 30px !important;
+      }
+
+      .booking-toast {
+        top: 12px !important;
+        right: 12px !important;
+        left: 12px !important;
+        width: auto !important;
       }
     }
   </style>
 </head>
 <body>
+
+  <!-- CONTAINER DE TOASTS / POPUPS FLUTUANTES -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- TELA DE LOGIN -->
+  <div id="loginOverlay">
+    <div class="login-card">
+      <div class="login-logo">Salão Michelly</div>
+      <div class="login-subtitle">Painel Gerencial</div>
+
+      <div id="loginError" class="login-error">
+        Senha incorreta. Tente novamente.
+      </div>
+
+      <form onsubmit="handleLogin(event)">
+        <input 
+          type="password" 
+          id="loginPassword" 
+          class="login-input" 
+          placeholder="Digite sua senha de acesso"
+          required 
+          autofocus
+        >
+        <button type="submit" class="login-btn">
+          Acessar Painel →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL OBRIGATÓRIO: TROCA DE SENHA GENÉRICA -->
+  <div id="changePassModal" class="modal-backdrop" style="z-index: 100000;">
+    <div class="modal-box">
+      <h3>Bem-vinda, Michele! ✨</h3>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 20px; line-height: 1.6;">
+        Você entrou com a senha temporária. Por motivos de segurança, crie sua nova senha pessoal antes de acessar o painel:
+      </p>
+
+      <form onsubmit="salvarNovaSenha(event)">
+        <div class="form-group">
+          <label>Nova Senha</label>
+          <input type="password" id="newPassInput" placeholder="Mínimo de 4 caracteres" required>
+        </div>
+
+        <div class="form-group">
+          <label>Confirmar Nova Senha</label>
+          <input type="password" id="confirmPassInput" placeholder="Repita a nova senha" required>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+            Salvar Nova Senha & Acessar Painel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE AUTENTICAÇÃO DO DESENVOLVEDOR -->
+  <div id="devAuthModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>Área do Desenvolvedor 🔒</h3>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 18px; line-height: 1.5;">
+        Esta área é exclusiva para o desenvolvedor gerenciar a conexão com a API e o banco de dados. Insira a senha de desenvolvedor:
+      </p>
+
+      <div id="devAuthError" class="login-error" style="display:none; margin-bottom: 14px;">
+        Acesso negado. Senha de desenvolvedor incorreta.
+      </div>
+
+      <form onsubmit="verificarDevAuth(event)">
+        <div class="form-group">
+          <label>Senha de Desenvolvedor</label>
+          <input type="password" id="devAuthPass" placeholder="Senha master de desenvolvedor" required>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary" onclick="fecharDevAuthModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Verificar & Abrir</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- LOADER OVERLAY -->
   <div id="loaderOverlay">
@@ -605,14 +1130,17 @@
     </div>
 
     <nav class="nav-menu">
-      <button class="nav-btn active" onclick="switchTab('agendamentos', this)">
-        📅 <span>Agendamentos</span>
+      <button class="nav-btn active" data-tab="agendamentos" onclick="switchTab('agendamentos', this)">
+        <span class="nav-icon">📅</span> <span>Agendamentos</span>
       </button>
-      <button class="nav-btn" onclick="switchTab('servicos', this)">
-        ✂️ <span>Serviços</span>
+      <button class="nav-btn" data-tab="servicos" onclick="switchTab('servicos', this)">
+        <span class="nav-icon">✂️</span> <span>Serviços & Preços</span>
       </button>
-      <button class="nav-btn" onclick="openConfigModal()">
-        ⚙️ <span>Configurações</span>
+      <button class="nav-btn nav-btn-horarios" data-tab="horarios" onclick="switchTab('horarios', this)">
+        <span class="nav-icon">⏰</span> <span>Horários & Bloqueios</span>
+      </button>
+      <button class="nav-btn" onclick="solicitarAcessoDev()" title="Apenas Desenvolvedor: URL da API e Webhook">
+        <span class="nav-icon">⚙️</span> <span>Config API 🔒</span>
       </button>
     </nav>
 
@@ -622,6 +1150,12 @@
         <span class="status-dot"></span>
         <span id="envLabel">Conectando...</span>
       </div>
+      <div style="margin-top: 10px; font-size: 11px; color: #8c7e81;">
+        Acesso: <strong id="userRoleSubBadge" style="color: var(--ink);">Carregando...</strong>
+      </div>
+      <button type="button" class="btn-logout" onclick="logout()">
+        🚪 Sair do Painel
+      </button>
     </div>
   </aside>
 
@@ -629,18 +1163,40 @@
   <main class="content">
 
     <div class="top-header">
+      <div class="mobile-brand-bar">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--primary-dark);">Salão Michelly</span>
+          <span class="connection-pill" style="font-size:10px; padding:2px 6px;"><span class="status-dot"></span> Online</span>
+        </div>
+        <button type="button" class="btn-logout-mobile" onclick="logout()">
+          🚪 Sair
+        </button>
+      </div>
+
       <div>
-        <h1 class="header-title">Visão Geral</h1>
-        <p class="header-sub">Gerenciamento de horários, clientes e catálogo em tempo real.</p>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <h1 class="header-title" style="margin:0;">Visão Geral</h1>
+          <span id="userRoleBadge" style="display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:20px; background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe;">
+            🛠️ Modo Desenvolvedor (Acesso Total)
+          </span>
+        </div>
+        <p class="header-sub" style="margin-top:6px;">
+          <span>Sincronização a cada 1 minuto</span>
+          <span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:var(--primary);"></span>
+          <span id="lastSyncTime">Atualizado agora</span>
+        </p>
       </div>
 
       <div class="top-actions">
-        <button class="btn-secondary" onclick="loadData(true)">
-          🔄 <span>Atualizar</span>
+        <button class="btn-secondary btn-block-action" onclick="irParaBloqueios()" title="Bloquear dias inteiros (folgas/feriados) ou horários específicos" style="border-color: #fca5a5; color: #991b1b; background: #fff1f2; font-weight:700;">
+          ⛔ <span>Bloquear Dias/Horas</span>
         </button>
-        <a href="https://wa.me/5512981765655" target="_blank" class="btn-primary">
-          💬 <span>WhatsApp Salão</span>
-        </a>
+        <button class="btn-secondary" onclick="testarNotificacao()" title="Testar o sino sonoro e o pop-up de novo agendamento">
+          🔔 <span>Testar Alerta</span>
+        </button>
+        <button class="btn-secondary" onclick="loadData(true)">
+          🔄 <span>Atualizar Agora</span>
+        </button>
       </div>
     </div>
 
@@ -654,12 +1210,12 @@
       <div class="kpi-card" style="border-left: 4px solid var(--warning-text);">
         <div class="kpi-label">Pendentes</div>
         <div class="kpi-val" id="kpiPendentes" style="color: var(--warning-text);">0</div>
-        <div class="kpi-sub">Aguardando resposta</div>
+        <div class="kpi-sub">Aguardando atendimento</div>
       </div>
       <div class="kpi-card" style="border-left: 4px solid var(--success-text);">
         <div class="kpi-label">Confirmados</div>
         <div class="kpi-val" id="kpiConfirmados" style="color: var(--success-text);">0</div>
-        <div class="kpi-sub">Prontos para atendimento</div>
+        <div class="kpi-sub">Horários garantidos</div>
       </div>
       <div class="kpi-card" style="border-left: 4px solid var(--primary);">
         <div class="kpi-label">Faturamento Previsto</div>
@@ -698,7 +1254,7 @@
               <tr>
                 <th>Data / Hora</th>
                 <th>Cliente</th>
-                <th>WhatsApp</th>
+                <th>Telefone</th>
                 <th>Serviço & Valor</th>
                 <th>Pagamento</th>
                 <th>Status</th>
@@ -724,7 +1280,7 @@
         <!-- LISTA DE SERVIÇOS -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title">Catálogo de Serviços</div>
+            <div class="card-title">Catálogo de Serviços & Preços</div>
           </div>
           <div class="table-wrap">
             <table>
@@ -734,7 +1290,7 @@
                   <th>Nome</th>
                   <th>Preço</th>
                   <th>Duração</th>
-                  <th style="text-align: right;">Remover</th>
+                  <th style="text-align: right;">Ações</th>
                 </tr>
               </thead>
               <tbody id="tbody-servicos">
@@ -747,7 +1303,7 @@
         <!-- ADICIONAR NOVO SERVIÇO -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title">Adicionar Serviço</div>
+            <div class="card-title">Adicionar Novo Serviço</div>
           </div>
           <form onsubmit="adicionarServico(event)">
             <div class="form-group">
@@ -775,14 +1331,213 @@
       </div>
     </div>
 
+    <!-- TAB 3: HORÁRIOS & BLOQUEIOS -->
+    <div id="horarios" class="section-tab">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+        
+        <!-- CARD 1: HORÁRIOS DE FUNCIONAMENTO PADRÃO -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🕒 Horário de Atendimento Padrão</div>
+          </div>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5;">
+            Defina os horários em que o salão atende clientes de Segunda a Sexta e aos Sábados. O site atualizará a lista de horários para agendamento automaticamente.
+          </p>
+
+          <form onsubmit="salvarHorariosAtendimento(event)">
+            <!-- SEGUNDA A SEXTA -->
+            <div style="background: var(--bg); padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 14px;">
+              <strong style="display:block; font-size: 13px; margin-bottom: 10px; color: var(--ink);">📅 Segunda a Sexta</strong>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Hora de Abertura</label>
+                  <input type="time" id="cfgSegSexInicio" value="09:00" required>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Hora de Fechamento</label>
+                  <input type="time" id="cfgSegSexFim" value="18:00" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- INTERVALO DE ALMOÇO -->
+            <div style="background: var(--bg); padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <strong style="font-size: 13px; color: var(--ink);">☕ Intervalo de Almoço</strong>
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer; text-transform:none; margin:0;">
+                  <input type="checkbox" id="cfgAlmocoAtivo" checked onchange="toggleAlmocoInputs()"> Pausar no almoço
+                </label>
+              </div>
+              <div id="almocoInputsRow" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Início do Almoço</label>
+                  <input type="time" id="cfgAlmocoInicio" value="12:00">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Fim do Almoço</label>
+                  <input type="time" id="cfgAlmocoFim" value="13:00">
+                </div>
+              </div>
+            </div>
+
+            <!-- SÁBADO -->
+            <div style="background: var(--bg); padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <strong style="font-size: 13px; color: var(--ink);">🗓️ Sábados</strong>
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer; text-transform:none; margin:0;">
+                  <input type="checkbox" id="cfgSabadoAtivo" checked onchange="toggleSabadoInputs()"> Atender no Sábado
+                </label>
+              </div>
+              <div id="sabadoInputsRow" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Início Sábado</label>
+                  <input type="time" id="cfgSabadoInicio" value="09:00">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Fim Sábado</label>
+                  <input type="time" id="cfgSabadoFim" value="13:00">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+              💾 Salvar Horários de Atendimento
+            </button>
+          </form>
+        </div>
+
+        <!-- COLUNA DIREITA: BLOQUEAR DIAS E HORÁRIOS -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <!-- BLOQUEAR DIA INTEIRO -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⛔ Bloquear Dia Inteiro (Folgas, Feriados)</div>
+            </div>
+            <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.4;">
+              Nenhum cliente conseguirá agendar nesta data (a data não aparecerá disponível no site).
+            </p>
+            <form onsubmit="bloquearDiaInteiro(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Data a Bloquear</label>
+                  <input type="date" id="blockDateInput" required>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Motivo (opcional)</label>
+                  <input type="text" id="blockDateReason" placeholder="Ex: Feriado, Folga Michelly">
+                </div>
+              </div>
+              <button type="submit" class="btn-danger" style="width: 100%; padding: 10px; font-weight: 600;">
+                ⛔ Bloquear Dia Inteiro
+              </button>
+            </form>
+          </div>
+
+          <!-- BLOQUEAR HORÁRIO PONTUAL -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">⏱️ Bloquear Horário Específico</div>
+            </div>
+            <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.4;">
+              Bloqueie uma hora específica de um determinado dia (ex.: consulta médica, intervalo).
+            </p>
+            <form onsubmit="bloquearHorarioPontual(event)">
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 10px; margin-bottom: 12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Data</label>
+                  <input type="date" id="blockTimeDateInput" required>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Horário</label>
+                  <input type="time" id="blockTimeSlotInput" value="14:00" required>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label>Motivo</label>
+                  <input type="text" id="blockTimeReason" placeholder="Ex: Consulta médica">
+                </div>
+              </div>
+              <button type="submit" class="btn-secondary" style="width: 100%; justify-content: center; padding: 10px; font-weight: 600;">
+                ⏱️ Bloquear Este Horário
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LISTA DE DIAS E HORÁRIOS BLOQUEADOS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Lista de Bloqueios Ativos</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Motivo</th>
+                <th>Criado Em</th>
+                <th style="text-align: right;">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-bloqueios">
+              <!-- Renderizado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <div id="emptyBloqueios" class="empty-state" style="display:none;">
+          Nenhum dia ou horário bloqueado no momento. Todos os horários normais de trabalho estão abertos!
+        </div>
+      </div>
+
+    </div>
+
   </main>
 
-  <!-- MODAL DE CONFIGURAÇÕES DE API -->
+  <!-- MODAL DE EDIÇÃO DE PREÇO DO SERVIÇO -->
+  <div id="editServiceModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>Ajustar Preço do Serviço</h3>
+      <p style="color: var(--muted); font-size: 13px; margin-bottom: 18px;">
+        Altere o preço ou os dados deste serviço. O novo valor aparecerá automaticamente no site.
+      </p>
+
+      <form onsubmit="salvarAjustePreco(event)">
+        <input type="hidden" id="edit-row-idx">
+
+        <div class="form-group">
+          <label>Nome do Serviço</label>
+          <input type="text" id="edit-svc-nome" required>
+        </div>
+
+        <div class="form-group">
+          <label>Preço Atualizado (R$)</label>
+          <input type="number" id="edit-svc-preco" step="0.01" min="0" placeholder="Ex.: 90" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label>Duração</label>
+          <input type="text" id="edit-svc-duracao" placeholder="Ex.: 45 min" required>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary" onclick="fecharModalEdicaoServico()">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Preço</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIGURAÇÕES DE API (EXCLUSIVO DESENVOLVEDOR) -->
   <div id="configModal" class="modal-backdrop">
     <div class="modal-box">
-      <h3>Configurações de Conexão</h3>
+      <h3>Configurações de Conexão (Dev)</h3>
       <p style="color: var(--muted); font-size: 13px; margin-bottom: 18px;">
-        Insira a URL gerada na implantação do Google Apps Script (Executável do Web App):
+        URL do Aplicativo da Web do Google Apps Script (Executável REST):
       </p>
 
       <div class="form-group">
@@ -791,7 +1546,7 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-        <button type="button" class="btn-secondary" onclick="closeConfigModal()">Cancelar</button>
+        <button type="button" class="btn-secondary" onclick="closeConfigModal()">Fechar</button>
         <button type="button" class="btn-primary" onclick="salvarConfigModal()">Salvar & Testar</button>
       </div>
     </div>
@@ -799,14 +1554,306 @@
 
   <script>
     /* =========================================================
+       SISTEMA DE ÁUDIO & NOTIFICAÇÕES (WEB AUDIO API)
+    ========================================================= */
+    let audioCtx = null;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Toca um elegante sino de salão (duas notas harmoniosas)
+    function playNotificationSound() {
+      try {
+        initAudioContext();
+        if (!audioCtx) return;
+
+        const now = audioCtx.currentTime;
+
+        // Nota 1: C5 suave (587 Hz)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now);
+        gain1.gain.setValueAtTime(0.25, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.8);
+
+        // Nota 2: E5 brilhante (880 Hz)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.15);
+        gain2.gain.setValueAtTime(0.3, now + 0.15);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.3);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.15);
+        osc2.stop(now + 1.3);
+      } catch (err) {
+        console.warn("Áudio não reproduzido (esperando interação do usuário):", err);
+      }
+    }
+
+    // Exibe pop-up flutuante (Toast)
+    function showBookingToast(booking) {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = "booking-toast";
+
+      toast.innerHTML = `
+        <div class="toast-icon-wrap">🔔</div>
+        <div class="toast-content">
+          <div class="toast-title">Novo Agendamento!</div>
+          <div class="toast-details">
+            <strong>${booking.cliente || 'Cliente'}</strong> solicitou <strong>${booking.servico || 'Serviço'}</strong><br>
+            <span style="color: var(--primary-dark); font-weight:600;">📅 ${booking.dataAgendada || ''} às ${booking.horario || ''}</span>
+          </div>
+        </div>
+        <button type="button" class="toast-close-btn" onclick="this.parentElement.remove()" title="Fechar">✕</button>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto-remover após 10 segundos
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+          toast.style.opacity = "0";
+          toast.style.transform = "translateX(100%)";
+          setTimeout(() => toast.remove(), 400);
+        }
+      }, 10000);
+
+      // Dispara também notificação do navegador se permitido
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Salão Michelly — Novo Agendamento!", {
+          body: `${booking.cliente} agendou ${booking.servico} para ${booking.dataAgendada} às ${booking.horario}`,
+          icon: "https://raw.githubusercontent.com/alansmorais/salaomichelly/refs/heads/main/Michelly%20Salon/images/Michelly_Rose-Gold_Salon_Logo.png"
+        });
+      }
+    }
+
+    function testarNotificacao() {
+      playNotificationSound();
+      showBookingToast({
+        cliente: "Maria Silva (Teste)",
+        servico: "Corte + Escova",
+        dataAgendada: "Hoje",
+        horario: "15:00"
+      });
+
+      // Solicita permissão do navegador se ainda não solicitou
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+    }
+
+    /* =========================================================
+       SISTEMA DE AUTENTICAÇÃO & PERMISSÕES
+    ========================================================= */
+    const DEFAULT_GENERIC_PASS = "michelly123";
+    const DEV_MASTER_PASS = "dev@asm2026";
+
+    function updateRoleBadge() {
+      const isDev = sessionStorage.getItem("IS_DEV") === "true";
+      const badge = document.getElementById("userRoleBadge");
+      const subBadge = document.getElementById("userRoleSubBadge");
+      if (badge) {
+        if (isDev) {
+          badge.innerHTML = "🛠️ Desenvolvedor (Acesso Total)";
+          badge.style.background = "#eff6ff";
+          badge.style.color = "#1e40af";
+          badge.style.borderColor = "#bfdbfe";
+        } else {
+          badge.innerHTML = "✨ Michelly (Proprietária)";
+          badge.style.background = "#fdf2f8";
+          badge.style.color = "#9d174d";
+          badge.style.borderColor = "#fbcfe8";
+        }
+      }
+      if (subBadge) {
+        subBadge.textContent = isDev ? "Desenvolvedor (Acesso Total)" : "Michelly (Proprietária)";
+      }
+    }
+
+    function checkAuth() {
+      if (sessionStorage.getItem("MICHELLY_AUTH") === "true") {
+        document.getElementById("loginOverlay").style.display = "none";
+        updateRoleBadge();
+        loadData(true);
+      } else {
+        document.getElementById("loginOverlay").style.display = "flex";
+        setTimeout(() => document.getElementById("loginPassword").focus(), 50);
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      initAudioContext(); // Desbloqueia áudio com o clique do login
+
+      const inputPass = document.getElementById("loginPassword").value.trim();
+      const savedPass = localStorage.getItem("MICHELLY_ADMIN_PASS") || DEFAULT_GENERIC_PASS;
+      const passChanged = localStorage.getItem("MICHELLY_PASS_CHANGED") === "true";
+
+      if (!inputPass) return;
+
+      // 1. Acesso Direto do Desenvolvedor (Master Key)
+      if (inputPass === DEV_MASTER_PASS) {
+        sessionStorage.setItem("MICHELLY_AUTH", "true");
+        sessionStorage.setItem("IS_DEV", "true"); // Registra que quem logou é o Desenvolvedor
+        updateRoleBadge();
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("loginPassword").value = "";
+        document.getElementById("loginError").style.display = "none";
+
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+
+        loadData(true);
+        return;
+      }
+
+      // 2. Acesso da Michele (Proprietária)
+      if (inputPass === savedPass) {
+        if (!passChanged || inputPass === DEFAULT_GENERIC_PASS) {
+          document.getElementById("loginError").style.display = "none";
+          document.getElementById("changePassModal").style.display = "flex";
+          setTimeout(() => document.getElementById("newPassInput").focus(), 50);
+          return;
+        }
+
+        sessionStorage.setItem("MICHELLY_AUTH", "true");
+        sessionStorage.removeItem("IS_DEV"); // É a Michele, não o Dev
+        updateRoleBadge();
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("loginPassword").value = "";
+        document.getElementById("loginError").style.display = "none";
+
+        // Solicita permissão de notificação do sistema
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
+
+        loadData(true);
+      } else {
+        document.getElementById("loginError").style.display = "block";
+        document.getElementById("loginPassword").focus();
+      }
+    }
+
+    function salvarNovaSenha(event) {
+      event.preventDefault();
+      const newPass = document.getElementById("newPassInput").value.trim();
+      const confirmPass = document.getElementById("confirmPassInput").value.trim();
+
+      if (newPass.length < 4) {
+        return alert("A nova senha deve ter pelo menos 4 caracteres.");
+      }
+
+      if (newPass === DEFAULT_GENERIC_PASS) {
+        return alert("A nova senha deve ser diferente da senha temporária inicial.");
+      }
+
+      if (newPass !== confirmPass) {
+        return alert("As duas senhas não coincidem. Digite novamente.");
+      }
+
+      localStorage.setItem("MICHELLY_ADMIN_PASS", newPass);
+      localStorage.setItem("MICHELLY_PASS_CHANGED", "true");
+      sessionStorage.setItem("MICHELLY_AUTH", "true");
+      sessionStorage.removeItem("IS_DEV");
+      updateRoleBadge();
+
+      document.getElementById("changePassModal").style.display = "none";
+      document.getElementById("loginOverlay").style.display = "none";
+      document.getElementById("loginPassword").value = "";
+      alert("Senha alterada com sucesso! Bem-vinda ao seu painel, Michele!");
+
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+
+      loadData(true);
+    }
+
+    function logout() {
+      sessionStorage.removeItem("MICHELLY_AUTH");
+      sessionStorage.removeItem("IS_DEV");
+      document.getElementById("loginOverlay").style.display = "flex";
+      document.getElementById("loginPassword").value = "";
+    }
+
+    /* =========================================================
+       PROTEÇÃO DA CONFIGURAÇÃO (SOMENTE O DESENVOLVEDOR)
+    ========================================================= */
+    function solicitarAcessoDev() {
+      // Se quem estiver logado já for o Desenvolvedor, abre direto sem pedir senha de novo!
+      if (sessionStorage.getItem("IS_DEV") === "true") {
+        openConfigModal();
+        return;
+      }
+
+      // Se for a Michele ou não autenticado como Dev, solicita a senha master
+      document.getElementById("devAuthPass").value = "";
+      document.getElementById("devAuthError").style.display = "none";
+      document.getElementById("devAuthModal").style.display = "flex";
+      setTimeout(() => document.getElementById("devAuthPass").focus(), 50);
+    }
+
+    function fecharDevAuthModal() {
+      document.getElementById("devAuthModal").style.display = "none";
+    }
+
+    function verificarDevAuth(event) {
+      event.preventDefault();
+      const pass = document.getElementById("devAuthPass").value.trim();
+      if (pass === DEV_MASTER_PASS) {
+        fecharDevAuthModal();
+        openConfigModal();
+      } else {
+        document.getElementById("devAuthError").style.display = "block";
+        document.getElementById("devAuthPass").focus();
+      }
+    }
+
+    function openConfigModal() {
+      document.getElementById("cfg-web-app-url").value = currentWebAppUrl;
+      document.getElementById("configModal").style.display = "flex";
+    }
+
+    function closeConfigModal() {
+      document.getElementById("configModal").style.display = "none";
+    }
+
+    function salvarConfigModal() {
+      const novaUrl = document.getElementById("cfg-web-app-url").value.trim();
+      if (!novaUrl) return alert("Insira uma URL válida.");
+
+      currentWebAppUrl = novaUrl;
+      localStorage.setItem("MICHELLY_WEB_APP_URL", novaUrl);
+      closeConfigModal();
+      loadData(true);
+    }
+
+    /* =========================================================
        CONFIGURAÇÃO & CLIENTE API HÍBRIDO (APPS SCRIPT OU FETCH)
     ========================================================= */
     const DEFAULT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxxtxRzc-SKAqyEO9unC7iqBIjzMWbt3ioMEQiYFSR9cmMqjm5z0RWF4qiJAqrviD4cbg/exec";
     
-    // Obtém URL gravada no navegador ou usa a padrão
     let currentWebAppUrl = localStorage.getItem("MICHELLY_WEB_APP_URL") || DEFAULT_WEB_APP_URL;
-
-    // Detecta se está rodando dentro do iframe do Google Apps Script
     const isRunningInsideGoogleScript = typeof google !== 'undefined' && google.script && google.script.run;
 
     const apiClient = {
@@ -839,6 +1886,24 @@
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: "update_status", rowIdx: rowIdx, status: novoStatus })
+          });
+          return await response.json();
+        }
+      },
+
+      async atualizarServico(rowIdx, preco, nome, duracao) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .atualizarServico(rowIdx, preco, nome, duracao);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "update_service", rowIdx: rowIdx, price: preco, name: nome, duration: duracao })
           });
           return await response.json();
         }
@@ -878,14 +1943,87 @@
           });
           return await response.json();
         }
+      },
+
+      async salvarHorarios(config) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .saveScheduleConfig(config);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "save_schedule", config: config })
+          });
+          return await response.json();
+        }
+      },
+
+      async bloquearDia(date, reason) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .blockDay(date, reason);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "block_day", date: date, reason: reason })
+          });
+          return await response.json();
+        }
+      },
+
+      async bloquearHorario(date, time, reason) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .blockTime(date, time, reason);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "block_time", date: date, time: time, reason: reason })
+          });
+          return await response.json();
+        }
+      },
+
+      async removerBloqueio(rowIdx) {
+        if (isRunningInsideGoogleScript) {
+          return new Promise((resolve, reject) => {
+            google.script.run
+              .withSuccessHandler(resolve)
+              .withFailureHandler(reject)
+              .removeBlock(rowIdx);
+          });
+        } else {
+          const response = await fetch(currentWebAppUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "remove_block", rowIdx: rowIdx })
+          });
+          return await response.json();
+        }
       }
     };
 
     /* =========================================================
-       ESTADO LOCAL & FILTROS
+       ESTADO LOCAL, RASTREAMENTO & FILTROS
     ========================================================= */
-    let cachedData = { agendamentos: [], servicos: [] };
+    let cachedData = { agendamentos: [], servicos: [], schedule: { config: {}, bloqueios: [] } };
     let filtroStatusAtivo = 'todos';
+    let knownBookingIds = null; // Rastreia agendamentos conhecidos para detectar novos
 
     const BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -898,9 +2036,27 @@
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.add('active');
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const match = document.querySelector(`.nav-btn[data-tab="${tabId}"]`);
+        if (match) match.classList.add('active');
+      }
+    }
+
+    function irParaBloqueios() {
+      const btnHorarios = document.querySelector('.nav-btn-horarios') || document.querySelector('.nav-btn[data-tab="horarios"]');
+      switchTab('horarios', btnHorarios);
+      setTimeout(() => {
+        const el = document.getElementById('blockDateInput');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.focus();
+        }
+      }, 120);
     }
 
     function updateEnvPill() {
@@ -913,24 +2069,54 @@
     }
 
     /* =========================================================
-       CARREGAR DADOS
+       CARREGAR DADOS & DETECÇÃO DE NOVOS AGENDAMENTOS
     ========================================================= */
     async function loadData(showSpinner = false) {
       if (showSpinner) setLoader(true, "Atualizando dados da planilha...");
       try {
         const data = await apiClient.getDashboardData();
+        
+        // Verifica se há novos agendamentos recebidos
+        const novosAgendamentos = data.agendamentos || [];
+
+        if (knownBookingIds === null) {
+          // Primeira carga: registra os existentes sem disparar alarme
+          knownBookingIds = new Set(novosAgendamentos.map(a => a.id));
+        } else {
+          // Cargas periódicas subsequentes (a cada 1 minuto)
+          const chegadasNovas = novosAgendamentos.filter(a => !knownBookingIds.has(a.id));
+
+          if (chegadasNovas.length > 0) {
+            // Toca o alarme sonoro
+            playNotificationSound();
+
+            // Exibe pop-up para cada novo agendamento
+            chegadasNovas.forEach(novo => {
+              knownBookingIds.add(novo.id);
+              showBookingToast(novo);
+            });
+          }
+        }
+
         cachedData = data;
         renderDashboard();
+
+        // Atualiza hora da última sincronização
+        const agora = new Date();
+        const horaStr = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById("lastSyncTime").textContent = `Última sincronização: ${horaStr}`;
+
       } catch (err) {
         console.error("Erro ao carregar dados:", err);
-        alert("Erro ao conectar à planilha do Google: " + (err.message || err));
+        if (showSpinner) {
+          alert("Erro ao conectar à planilha do Google: " + (err.message || err));
+        }
       } finally {
         setLoader(false);
       }
     }
 
     function renderDashboard() {
-      // 1. Atualizar Métricas / KPIs
       const ags = cachedData.agendamentos || [];
       const total = ags.length;
       const pendentes = ags.filter(a => (a.status || '').toLowerCase() === 'pendente').length;
@@ -947,13 +2133,13 @@
       document.getElementById("kpiConfirmados").textContent = confirmados;
       document.getElementById("kpiFaturamento").textContent = BRL.format(faturamento);
 
-      // 2. Renderizar Agendamentos e Serviços
       filtrarAgendamentos();
       renderServicos();
+      renderScheduleTab();
     }
 
     /* =========================================================
-       RENDERIZAÇÃO DE AGENDAMENTOS & FILTROS
+       RENDERIZAÇÃO DE AGENDAMENTOS
     ========================================================= */
     function setFiltroStatus(status, btn) {
       filtroStatusAtivo = status;
@@ -991,18 +2177,10 @@
       emptyMsg.style.display = "none";
       tbody.innerHTML = ags.map(ag => {
         const cleanPhone = String(ag.telefone).replace(/\D/g, '');
-        const waNumber = cleanPhone.startsWith('55') ? cleanPhone : ('55' + cleanPhone);
-        
-        // Mensagem pré-formatada para confirmar com a cliente via WhatsApp
-        const waMsgConfirmacao = encodeURIComponent(
-          `Olá, ${ag.cliente}! ✨ Passando para confirmar seu horário no Salão Michelly para *${ag.servico}* no dia *${ag.dataAgendada}* às *${ag.horario}*. Esperamos você com muito carinho! 💕`
-        );
-        const waUrl = `https://wa.me/${waNumber}?text=${waMsgConfirmacao}`;
-
         const statusClass = (ag.status || 'pendente').toLowerCase();
 
         return `
-          <tr>
+          <tr id="row-${ag.id}">
             <td>
               <strong>${ag.dataAgendada || 'A combinar'}</strong><br>
               <span style="color: var(--muted); font-size: 12px;">⏰ ${ag.horario || '--:--'}</span>
@@ -1012,9 +2190,8 @@
               <small style="color: var(--muted);">${ag.id || ''}</small>
             </td>
             <td>
-              <a href="tel:${cleanPhone}" style="color: var(--ink); text-decoration: none;">${ag.telefone}</a><br>
-              <a href="${waUrl}" target="_blank" class="wa-btn" style="margin-top: 4px;">
-                💬 WhatsApp
+              <a href="tel:${cleanPhone}" style="color: var(--ink); text-decoration: none; font-weight: 500;">
+                📞 ${ag.telefone}
               </a>
             </td>
             <td>
@@ -1031,9 +2208,9 @@
             <td>
               <select class="action-select" onchange="alterarStatus(${ag.rowIdx}, this.value)">
                 <option value="" disabled selected>Alterar status...</option>
-                <option value="Confirmado">✅ Confirmar</option>
+                <option value="Confirmado">✅ Confirmado</option>
                 <option value="Pendente">⏳ Pendente</option>
-                <option value="Cancelado">❌ Cancelar</option>
+                <option value="Cancelado">❌ Cancelado</option>
               </select>
             </td>
           </tr>
@@ -1041,9 +2218,6 @@
       }).join("");
     }
 
-    /* =========================================================
-       AÇÕES DE AGENDAMENTO E SERVIÇOS
-    ========================================================= */
     async function alterarStatus(rowIdx, novoStatus) {
       if (!novoStatus) return;
       setLoader(true, `Atualizando status para ${novoStatus}...`);
@@ -1057,6 +2231,9 @@
       }
     }
 
+    /* =========================================================
+       CATÁLOGO DE SERVIÇOS & AJUSTE DE PREÇOS
+    ========================================================= */
     function renderServicos() {
       const svcs = cachedData.servicos || [];
       const tbody = document.getElementById("tbody-servicos");
@@ -1066,17 +2243,71 @@
         return;
       }
 
-      tbody.innerHTML = svcs.map(sv => `
-        <tr>
-          <td style="color: var(--muted); font-family: monospace;">${sv.id}</td>
-          <td><strong>${sv.nome}</strong></td>
-          <td>${BRL.format(sv.preco)}</td>
-          <td>${sv.duracao}</td>
-          <td style="text-align: right;">
-            <button class="btn-danger" onclick="removerServico(${sv.rowIdx})">Excluir</button>
-          </td>
-        </tr>
-      `).join("");
+      tbody.innerHTML = svcs.map(sv => {
+        const nomeSafe = (sv.nome || '').replace(/'/g, "\\'");
+        const duracaoSafe = (sv.duracao || '').replace(/'/g, "\\'");
+
+        return `
+          <tr>
+            <td style="color: var(--muted); font-family: monospace;">${sv.id}</td>
+            <td><strong>${sv.nome}</strong></td>
+            <td><strong style="color: var(--primary);">${BRL.format(sv.preco)}</strong></td>
+            <td>${sv.duracao}</td>
+            <td style="text-align: right; white-space: nowrap;">
+              <button 
+                type="button" 
+                class="btn-edit-sm" 
+                onclick="abrirModalEdicaoServico(${sv.rowIdx}, '${nomeSafe}', ${sv.preco}, '${duracaoSafe}')"
+                style="margin-right: 6px;"
+              >
+                ✏️ Ajustar Preço
+              </button>
+              <button 
+                type="button" 
+                class="btn-danger" 
+                onclick="removerServico(${sv.rowIdx})"
+              >
+                Excluir
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function abrirModalEdicaoServico(rowIdx, nome, preco, duracao) {
+      document.getElementById("edit-row-idx").value = rowIdx;
+      document.getElementById("edit-svc-nome").value = nome;
+      document.getElementById("edit-svc-preco").value = preco;
+      document.getElementById("edit-svc-duracao").value = duracao;
+
+      document.getElementById("editServiceModal").style.display = "flex";
+      setTimeout(() => document.getElementById("edit-svc-preco").focus(), 50);
+    }
+
+    function fecharModalEdicaoServico() {
+      document.getElementById("editServiceModal").style.display = "none";
+    }
+
+    async function salvarAjustePreco(event) {
+      event.preventDefault();
+      const rowIdx = document.getElementById("edit-row-idx").value;
+      const nome = document.getElementById("edit-svc-nome").value.trim();
+      const preco = document.getElementById("edit-svc-preco").value.trim();
+      const duracao = document.getElementById("edit-svc-duracao").value.trim();
+
+      if (!preco) return alert("Informe o novo preço do serviço.");
+
+      setLoader(true, "Atualizando preço na planilha...");
+      try {
+        await apiClient.atualizarServico(rowIdx, preco, nome, duracao);
+        fecharModalEdicaoServico();
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao atualizar preço: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
     }
 
     async function adicionarServico(event) {
@@ -1120,37 +2351,192 @@
     }
 
     /* =========================================================
-       MODAL DE CONFIGURAÇÃO DE URL
+       GESTÃO DE HORÁRIOS & BLOQUEIOS
     ========================================================= */
-    function openConfigModal() {
-      document.getElementById("cfg-web-app-url").value = currentWebAppUrl;
-      document.getElementById("configModal").style.display = "flex";
+    function toggleAlmocoInputs() {
+      const ativo = document.getElementById("cfgAlmocoAtivo").checked;
+      const row = document.getElementById("almocoInputsRow");
+      if (row) row.style.opacity = ativo ? "1" : "0.4";
+      const inicio = document.getElementById("cfgAlmocoInicio");
+      const fim = document.getElementById("cfgAlmocoFim");
+      if (inicio) inicio.disabled = !ativo;
+      if (fim) fim.disabled = !ativo;
     }
 
-    function closeConfigModal() {
-      document.getElementById("configModal").style.display = "none";
+    function toggleSabadoInputs() {
+      const ativo = document.getElementById("cfgSabadoAtivo").checked;
+      const row = document.getElementById("sabadoInputsRow");
+      if (row) row.style.opacity = ativo ? "1" : "0.4";
+      const inicio = document.getElementById("cfgSabadoInicio");
+      const fim = document.getElementById("cfgSabadoFim");
+      if (inicio) inicio.disabled = !ativo;
+      if (fim) fim.disabled = !ativo;
     }
 
-    function salvarConfigModal() {
-      const novaUrl = document.getElementById("cfg-web-app-url").value.trim();
-      if (!novaUrl) return alert("Insira uma URL válida.");
+    function renderScheduleTab() {
+      const schedule = cachedData.schedule || {};
+      const cfg = schedule.config || {};
+      const bloqueios = schedule.bloqueios || [];
 
-      currentWebAppUrl = novaUrl;
-      localStorage.setItem("MICHELLY_WEB_APP_URL", novaUrl);
-      closeConfigModal();
-      loadData(true);
+      // Preenche os campos de horários de atendimento
+      if (cfg.seg_sex_inicio) document.getElementById("cfgSegSexInicio").value = cfg.seg_sex_inicio;
+      if (cfg.seg_sex_fim) document.getElementById("cfgSegSexFim").value = cfg.seg_sex_fim;
+
+      const almocoAtivo = cfg.almoco_ativo !== "Não";
+      document.getElementById("cfgAlmocoAtivo").checked = almocoAtivo;
+      if (cfg.almoco_inicio) document.getElementById("cfgAlmocoInicio").value = cfg.almoco_inicio;
+      if (cfg.almoco_fim) document.getElementById("cfgAlmocoFim").value = cfg.almoco_fim;
+      toggleAlmocoInputs();
+
+      const sabadoAtivo = cfg.sabado_ativo !== "Não";
+      document.getElementById("cfgSabadoAtivo").checked = sabadoAtivo;
+      if (cfg.sabado_inicio) document.getElementById("cfgSabadoInicio").value = cfg.sabado_inicio;
+      if (cfg.sabado_fim) document.getElementById("cfgSabadoFim").value = cfg.sabado_fim;
+      toggleSabadoInputs();
+
+      // Preenche valor mínimo dos inputs de data para 'hoje'
+      const hojeIso = new Date().toISOString().split("T")[0];
+      const blockDateEl = document.getElementById("blockDateInput");
+      const blockTimeDateEl = document.getElementById("blockTimeDateInput");
+      if (blockDateEl && !blockDateEl.value) blockDateEl.min = hojeIso;
+      if (blockTimeDateEl && !blockTimeDateEl.value) blockTimeDateEl.min = hojeIso;
+
+      // Renderiza tabela de bloqueios
+      const tbody = document.getElementById("tbody-bloqueios");
+      const emptyEl = document.getElementById("emptyBloqueios");
+
+      if (!tbody) return;
+
+      if (bloqueios.length === 0) {
+        tbody.innerHTML = "";
+        if (emptyEl) emptyEl.style.display = "block";
+        return;
+      }
+
+      if (emptyEl) emptyEl.style.display = "none";
+      tbody.innerHTML = bloqueios.map(b => {
+        const isDiaInteiro = b.tipo === "DIA_INTEIRO";
+        const badgeClass = isDiaInteiro ? "bg-cancelado" : "bg-pendente";
+        const tipoLabel = isDiaInteiro ? "⛔ Dia Inteiro" : "⏱️ Horário";
+        const horaLabel = isDiaInteiro ? "O dia todo" : `<strong>${b.horario}</strong>`;
+
+        return `
+          <tr>
+            <td><span class="badge ${badgeClass}">${tipoLabel}</span></td>
+            <td><strong>${b.data}</strong></td>
+            <td>${horaLabel}</td>
+            <td style="color: var(--muted);">${b.motivo || "—"}</td>
+            <td style="font-size: 11px; color: var(--muted);">${b.dataCriacao || "—"}</td>
+            <td style="text-align: right;">
+              <button 
+                type="button" 
+                class="btn-danger" 
+                onclick="desbloquearItem(${b.rowIdx})"
+                title="Desbloquear e liberar na agenda"
+              >
+                🗑️ Desbloquear
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function salvarHorariosAtendimento(event) {
+      event.preventDefault();
+      const config = {
+        seg_sex_ativo: "Sim",
+        seg_sex_inicio: document.getElementById("cfgSegSexInicio").value || "09:00",
+        seg_sex_fim: document.getElementById("cfgSegSexFim").value || "18:00",
+        almoco_ativo: document.getElementById("cfgAlmocoAtivo").checked ? "Sim" : "Não",
+        almoco_inicio: document.getElementById("cfgAlmocoInicio").value || "12:00",
+        almoco_fim: document.getElementById("cfgAlmocoFim").value || "13:00",
+        sabado_ativo: document.getElementById("cfgSabadoAtivo").checked ? "Sim" : "Não",
+        sabado_inicio: document.getElementById("cfgSabadoInicio").value || "09:00",
+        sabado_fim: document.getElementById("cfgSabadoFim").value || "13:00",
+        domingo_ativo: "Não"
+      };
+
+      setLoader(true, "Salvando horários de funcionamento...");
+      try {
+        await apiClient.salvarHorarios(config);
+        alert("Horários de funcionamento salvos com sucesso! O site já refletirá os novos horários.");
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao salvar horários: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    async function bloquearDiaInteiro(event) {
+      event.preventDefault();
+      const date = document.getElementById("blockDateInput").value;
+      const reason = document.getElementById("blockDateReason").value.trim();
+
+      if (!date) return alert("Selecione uma data para bloquear.");
+
+      setLoader(true, "Bloqueando dia na agenda...");
+      try {
+        await apiClient.bloquearDia(date, reason);
+        document.getElementById("blockDateInput").value = "";
+        document.getElementById("blockDateReason").value = "";
+        alert(`Dia ${date} bloqueado com sucesso! Nenhum cliente poderá agendar nesta data.`);
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao bloquear dia: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    async function bloquearHorarioPontual(event) {
+      event.preventDefault();
+      const date = document.getElementById("blockTimeDateInput").value;
+      const time = document.getElementById("blockTimeSlotInput").value;
+      const reason = document.getElementById("blockTimeReason").value.trim();
+
+      if (!date || !time) return alert("Selecione a data e o horário para bloquear.");
+
+      setLoader(true, "Bloqueando horário na agenda...");
+      try {
+        await apiClient.bloquearHorario(date, time, reason);
+        document.getElementById("blockTimeReason").value = "";
+        alert(`Horário ${time} do dia ${date} bloqueado com sucesso!`);
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao bloquear horário: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    async function desbloquearItem(rowIdx) {
+      if (!confirm("Deseja desbloquear este item e liberar os horários para agendamento?")) return;
+
+      setLoader(true, "Removendo bloqueio...");
+      try {
+        await apiClient.removerBloqueio(rowIdx);
+        await loadData(false);
+      } catch (err) {
+        alert("Erro ao remover bloqueio: " + (err.message || err));
+      } finally {
+        setLoader(false);
+      }
     }
 
     /* =========================================================
-       INICIALIZAÇÃO
+       INICIALIZAÇÃO & INTERVALO DE 1 MINUTO
     ========================================================= */
     window.addEventListener("DOMContentLoaded", () => {
       updateEnvPill();
-      loadData(true);
+      checkAuth();
 
-      // Auto-atualização suave a cada 60 segundos
+      // Atualização automática a cada 1 minuto (60.000 ms)
       setInterval(() => {
-        loadData(false);
+        if (sessionStorage.getItem("MICHELLY_AUTH") === "true") {
+          loadData(false);
+        }
       }, 60000);
     });
   </script>
