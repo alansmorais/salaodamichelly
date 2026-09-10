@@ -878,6 +878,7 @@ p{
 }
 
 .input-group input,
+.input-group select,
 .input-group textarea{
   width:100%;
 
@@ -906,6 +907,7 @@ p{
 }
 
 .input-group input:focus,
+.input-group select:focus,
 .input-group textarea:focus{
   border-color:var(--rose);
   box-shadow:0 0 0 3px rgba(216,162,164,.06);
@@ -1192,7 +1194,6 @@ p{
   border:1px solid var(--line);
   border-radius:16px;
   background:var(--surface);
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1206,7 +1207,7 @@ p{
   width:100%;
   height:100%;
   display:block;
-  object-fit:contain; /* Shrink to fit logic applied here */
+  object-fit:contain;
   object-position:center;
   transition:.5s ease;
 }
@@ -1343,6 +1344,20 @@ p{
   font-weight:600;
 }
 
+.admin-link{
+  display:inline-block;
+  margin-top:16px;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#615355;
+  transition:0.2s;
+}
+
+.admin-link:hover{
+  color:var(--rose);
+}
+
 /* =========================
    MOBILE BOOKING BAR
 ========================= */
@@ -1442,10 +1457,14 @@ p{
   align-items:center;
   justify-content:center;
 
-  padding:20px;
+  padding:20px 14px;
 
-  background:rgba(0,0,0,.82);
+  background:rgba(0,0,0,.85);
   backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 .modal-overlay.active{
@@ -1453,85 +1472,146 @@ p{
 }
 
 .modal-content{
-  width:min(430px,100%);
+  position:relative;
+  width:min(440px,100%);
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+  margin:auto;
 
-  padding:34px;
+  padding:28px 24px;
 
   border:1px solid var(--line-strong);
-  border-radius:22px;
+  border-radius:20px;
 
   background:
     radial-gradient(circle at 50% 0,rgba(216,162,164,.08),transparent 50%),
     var(--surface);
 
-  box-shadow:0 30px 100px rgba(0,0,0,.55);
+  box-shadow:0 30px 100px rgba(0,0,0,.65);
 
   text-align:center;
+  scrollbar-width:thin;
+}
+
+.modal-content::-webkit-scrollbar{
+  width:5px;
+}
+
+.modal-content::-webkit-scrollbar-thumb{
+  background:var(--line-strong);
+  border-radius:999px;
+}
+
+.modal-corner-close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--rose-light);
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.2s ease;
+  z-index:10;
+}
+
+.modal-corner-close:hover{
+  background:rgba(216,162,164,.2);
+  color:#fff;
 }
 
 .modal-icon{
-  width:54px;
-  height:54px;
+  width:46px;
+  height:46px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  margin:0 auto 18px;
+  margin:0 auto 12px;
 
   border:1px solid var(--line-strong);
   border-radius:50%;
 
   color:var(--rose-light);
 
-  font-size:22px;
+  font-size:18px;
 }
 
 .modal-content h2{
-  margin:0 0 8px;
+  margin:0 0 4px;
 
   color:var(--rose-light);
 
-  font-size:40px;
+  font-size:clamp(26px,5vw,32px);
   font-weight:500;
+  line-height:1.1;
 }
 
 .modal-content p{
-  margin:0 0 22px;
+  margin:0 0 16px;
 
   color:var(--muted);
 
   font-size:12px;
-  line-height:1.7;
+  line-height:1.5;
 }
 
 .modal-summary{
-  margin:0 0 24px;
+  margin:0 0 18px;
 
-  padding:15px;
+  padding:14px 16px;
 
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:14px;
 
   background:var(--bg);
+  text-align:left;
 }
 
-.modal-summary strong{
-  display:block;
-
-  color:var(--ink-soft);
-
+.modal-summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:6px 0;
+  border-bottom:1px solid rgba(216,162,164,.10);
   font-size:12px;
 }
 
-.modal-summary span{
-  display:block;
+.modal-summary-row:last-child{
+  border-bottom:0;
+  padding-bottom:0;
+}
 
-  margin-top:5px;
-
-  color:var(--rose-light);
-
+.modal-summary-row span{
+  color:var(--muted);
   font-size:11px;
+}
+
+.modal-summary-row strong{
+  color:var(--ink-soft);
+  font-weight:500;
+  text-align:right;
+}
+
+.modal-summary-address{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px dashed var(--line);
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.modal-summary-address strong{
+  color:var(--ink-soft);
 }
 
 .modal-close{
@@ -1831,6 +1911,7 @@ p{
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
+select:focus-visible,
 textarea:focus-visible{
   outline:2px solid var(--rose-light);
   outline-offset:3px;
@@ -2220,6 +2301,19 @@ textarea:focus-visible{
             >
 
           </div>
+          
+          <div class="input-group full">
+
+            <label for="paymentMethod">
+              Forma de Pagamento
+            </label>
+
+            <select id="paymentMethod" required>
+              <option value="Local (Cartão/PIX/Dinheiro)">Pagamento no Salão (Cartão, PIX, Dinheiro)</option>
+              <option value="PIX Antecipado">PIX (Chave Antecipada)</option>
+            </select>
+
+          </div>
 
 
           <div class="input-group full">
@@ -2307,13 +2401,12 @@ textarea:focus-visible{
         class="primary-btn summary-button"
         disabled
       >
-        Continuar pelo WhatsApp →
+        Confirmar Agendamento →
       </button>
 
 
       <p class="summary-note">
-        Seu horário será solicitado pelo WhatsApp
-        e confirmado pelo salão.
+        Sua reserva será registrada diretamente em nosso sistema. Esperamos por você!
       </p>
 
     </aside>
@@ -2905,6 +2998,12 @@ textarea:focus-visible{
       </a>
     </p>
 
+    <div>
+      <a href="admin.html" class="admin-link" target="_blank">
+        ⚙️ Acesso Administrativo
+      </a>
+    </div>
+
   </div>
 
 </footer>
@@ -2941,8 +3040,106 @@ textarea:focus-visible{
       class="mobile-booking-btn"
       id="mobileBookButton"
     >
-      Continuar
+      Confirmar Reserva
     </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     QUICK BOOKING MODAL (AGENDAMENTO RÁPIDO)
+========================= -->
+
+<div
+  id="modalQuickBooking"
+  class="modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="quickServiceTitle"
+>
+
+  <div class="modal-content" style="width: min(540px, 100%); text-align: left; padding: 26px 22px;">
+
+    <button
+      type="button"
+      class="modal-corner-close"
+      onclick="closeQuickBookingModal()"
+      aria-label="Fechar janela"
+    >✕</button>
+
+    <!-- HEADER DO SERVIÇO -->
+    <div style="margin-bottom: 18px;">
+      <span class="eyebrow" style="margin-bottom: 6px; font-size: 10px;">Agendamento Rápido</span>
+      <h2 id="quickServiceTitle" style="font-size: clamp(22px, 4vw, 26px); margin: 0 0 6px; color: var(--rose-light);">
+        Serviço Selecionado
+      </h2>
+      <div id="quickServiceMeta" style="font-size: 13px; color: var(--ink-soft); font-weight: 500;">
+        <!-- Preço · Duração -->
+      </div>
+    </div>
+
+    <!-- PASSO 1: ESCOLHA DA DATA -->
+    <div style="margin-bottom: 16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted);">
+          1. Escolha a Data
+        </span>
+        <span id="quickDateHint" style="font-size: 11px; color: var(--rose-light); font-weight: 500;"></span>
+      </div>
+      <div class="date-scroll" id="quickDateScroll" style="padding-bottom: 6px;"></div>
+    </div>
+
+    <!-- PASSO 2: ESCOLHA DO HORÁRIO -->
+    <div style="margin-bottom: 18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+        <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted);">
+          2. Escolha o Horário
+        </span>
+        <span id="quickTimeHint" style="font-size: 11px; color: var(--rose-light); font-weight: 500;">Selecione um horário</span>
+      </div>
+      <div class="time-grid" id="quickTimeGrid">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- PASSO 3: IDENTIFICAÇÃO E CONFIRMAÇÃO -->
+    <form id="quickBookingForm" onsubmit="confirmarAgendamentoRapido(event)">
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--rose-light); margin-bottom: 12px;">
+          3. Seus Dados para Confirmação
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <label style="display:block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 4px;">Seu Nome Completo</label>
+            <input type="text" id="quickName" required placeholder="Ex.: Maria Silva" style="width:100%; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; color:var(--ink); font-size:13px;">
+          </div>
+          <div>
+            <label style="display:block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 4px;">WhatsApp (com DDD)</label>
+            <input type="tel" id="quickPhone" required placeholder="(12) 99999-9999" style="width:100%; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; color:var(--ink); font-size:13px;">
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 4px;">Forma de Pagamento</label>
+          <select id="quickPayment" style="width:100%; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; color:var(--ink); font-size:13px;">
+            <option value="No Salão (Cartão, PIX, Dinheiro)">No Salão (Cartão, PIX ou Dinheiro)</option>
+            <option value="PIX Antecipado">PIX (Chave Antecipada)</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        id="btnQuickConfirm"
+        class="primary-btn"
+        style="width: 100%; justify-content: center; min-height: 48px; font-size: 14px;"
+      >
+        Confirmar Agendamento →
+      </button>
+    </form>
 
   </div>
 
@@ -2963,51 +3160,60 @@ textarea:focus-visible{
 
   <div class="modal-content">
 
+    <button
+      type="button"
+      class="modal-corner-close"
+      onclick="concluirAgendamento()"
+      aria-label="Fechar confirmação"
+    >✕</button>
+
     <div class="modal-icon">
       ✓
     </div>
 
     <h2 id="modalTitle">
-      Quase pronto!
+      Reserva Confirmada!
     </h2>
 
     <p>
-      Seu pedido de agendamento está preparado.
-      Envie os detalhes pelo WhatsApp para que
-      o Salão Michelly possa confirmar seu horário.
+      Seu agendamento foi registrado com sucesso em nosso sistema.<br>
+      Esperamos você no Salão Michelly!
     </p>
 
-
     <div class="modal-summary">
-
-      <strong id="modalService">
-        —
-      </strong>
-
-      <span id="modalDateTime">
-        —
-      </span>
-
+      <div class="modal-summary-row">
+        <span>👤 Cliente:</span>
+        <strong id="modalClient">—</strong>
+      </div>
+      <div class="modal-summary-row">
+        <span>✂️ Serviço:</span>
+        <strong id="modalService" style="color: var(--rose-light);">—</strong>
+      </div>
+      <div class="modal-summary-row">
+        <span>📅 Data & Hora:</span>
+        <strong id="modalDateTime">—</strong>
+      </div>
+      <div class="modal-summary-row">
+        <span>💰 Valor Estimado:</span>
+        <strong id="modalPrice" style="color: var(--rose-light);">—</strong>
+      </div>
+      <div class="modal-summary-row">
+        <span>💳 Pagamento:</span>
+        <strong id="modalPayment">—</strong>
+      </div>
+      <div class="modal-summary-address">
+        📍 <strong>Endereço:</strong> R. José Pacini, 215 - Topolândia, São Sebastião - SP
+      </div>
     </div>
 
-
     <button
       type="button"
-      id="btnSendWhatsapp"
+      id="btnFinishBooking"
       class="primary-btn"
-      style="width:100%;"
+      style="width:100%; justify-content: center;"
+      onclick="concluirAgendamento()"
     >
-      Enviar para WhatsApp →
-    </button>
-
-
-    <button
-      type="button"
-      id="modalClose"
-      class="modal-close"
-    >
-      Voltar
-
+      Concluir
     </button>
 
   </div>
@@ -3023,72 +3229,24 @@ textarea:focus-visible{
 
 const salaoPhone = "5512981765655";
 
+// URL DA API GOOGLE APPS SCRIPT
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxxtxRzc-SKAqyEO9unC7iqBIjzMWbt3ioMEQiYFSR9cmMqjm5z0RWF4qiJAqrviD4cbg/exec";
+
 
 /* =========================================================
-   SERVICES
+   SERVICES (CATÁLOGO PADRÃO COM FALLBACK RESILIENTE)
 ========================================================= */
 
-const services = [
-
-  {
-    id:"corte",
-    name:"Corte",
-    price:70,
-    duration:"45 min"
-  },
-
-  {
-    id:"escova",
-    name:"Escova",
-    price:70,
-    duration:"45 min",
-    prefix:"A partir de"
-  },
-
-  {
-    id:"progressiva",
-    name:"Progressiva",
-    price:180,
-    duration:"2h30",
-    prefix:"A partir de"
-  },
-
-  {
-    id:"hidratacao",
-    name:"Hidratação",
-    price:80,
-    duration:"1h",
-    prefix:"A partir de"
-  },
-
-  {
-    id:"unha",
-    name:"Mão ou Pé",
-    price:70,
-    duration:"1h"
-  },
-
-  {
-    id:"design",
-    name:"Design de Sobrancelha",
-    price:50,
-    duration:"30 min"
-  },
-
-  {
-    id:"henna",
-    name:"Design + Henna",
-    price:70,
-    duration:"45 min"
-  },
-
-  {
-    id:"cilios",
-    name:"Cílios",
-    price:0,
-    duration:"Consulte"
-  }
-
+let services = [
+  { id:"corte", name:"Corte Feminino", price:70, duration:"45 min" },
+  { id:"escova", name:"Escova", price:70, duration:"45 min", prefix:"A partir de" },
+  { id:"progressiva", name:"Progressiva", price:180, duration:"2h30", prefix:"A partir de" },
+  { id:"hidratacao", name:"Hidratação Profunda", price:80, duration:"1h", prefix:"A partir de" },
+  { id:"unha-mao", name:"Unhas (Mão)", price:70, duration:"45 min" },
+  { id:"unha-pe", name:"Unhas (Pé)", price:70, duration:"45 min" },
+  { id:"design-sobrancelha", name:"Design de Sobrancelha", price:50, duration:"30 min" },
+  { id:"design-henna", name:"Design + Henna", price:70, duration:"45 min" },
+  { id:"alongamento-cilios", name:"Alongamento de Cílios", price:150, duration:"2h" }
 ];
 
 
@@ -3110,6 +3268,24 @@ let selectedDateStr = null;
 let selectedTime = null;
 
 let dateOffset = 0;
+
+// Configurações de horários e bloqueios do Salão
+let scheduleConfig = {
+  seg_sex_ativo: "Sim",
+  seg_sex_inicio: "09:00",
+  seg_sex_fim: "18:00",
+  almoco_ativo: "Sim",
+  almoco_inicio: "12:00",
+  almoco_fim: "13:00",
+  sabado_ativo: "Sim",
+  sabado_inicio: "09:00",
+  sabado_fim: "13:00",
+  domingo_ativo: "Não",
+  intervalo_minutos: "60"
+};
+const blockedDays = new Set();
+const blockedTimes = new Set();
+const bookedSlots = new Set();
 
 
 /* =========================================================
@@ -3136,7 +3312,57 @@ const mobileBookButton =
 
 
 /* =========================================================
-   SERVICES
+   INTEGRAÇÃO API - CARREGAR SERVIÇOS E DISPONIBILIDADE DA PLANILHA
+========================================================= */
+
+async function carregarServicosAPI() {
+  renderServices(); // Exibe lista padrão imediatamente para não travar a tela
+  try {
+    const response = await fetch(WEB_APP_URL + "?action=get_services");
+    const data = await response.json();
+    
+    if (data.status === "success" && data.services && data.services.length > 0) {
+      services = data.services.map(s => ({
+        id: s.id,
+        name: s.name,
+        price: Number(s.price) || 0,
+        duration: s.duration || "45 min",
+        prefix: "" 
+      }));
+      renderServices();
+    }
+
+    // Carrega configurações de horário de funcionamento e bloqueios
+    if (data.schedule && data.schedule.status === "success") {
+      if (data.schedule.config) {
+        scheduleConfig = Object.assign(scheduleConfig, data.schedule.config);
+      }
+      if (data.schedule.bloqueios) {
+        blockedDays.clear();
+        blockedTimes.clear();
+        data.schedule.bloqueios.forEach(b => {
+          if (b.tipo === "DIA_INTEIRO") {
+            blockedDays.add(b.data);
+          } else if (b.tipo === "HORARIO") {
+            blockedTimes.add(`${b.data}_${b.horario}`);
+          }
+        });
+      }
+      if (data.schedule.ocupados) {
+        bookedSlots.clear();
+        data.schedule.ocupados.forEach(o => {
+          bookedSlots.add(`${o.data}_${o.horario}`);
+        });
+      }
+      renderDates();
+    }
+  } catch(e) {
+    console.warn("Aviso: Carregando catálogo local padrão (API em inicialização ou offline).", e);
+  }
+}
+
+/* =========================================================
+   SERVICES RENDER & SELECTION
 ========================================================= */
 
 function renderServices(){
@@ -3195,20 +3421,28 @@ function selectService(id){
 
   renderServices();
 
+  // Se não houver data selecionada, pega a primeira disponível
+  if (!selectedDateStr) {
+    const dates = getAvailableDates();
+    if (dates.length > 0) {
+      selectedDateStr = toLocalISO(dates[0]);
+    }
+  }
+
   if(selectedDateStr){
-
-    const date =
-      parseDate(selectedDateStr);
-
+    const date = parseDate(selectedDateStr);
     renderTimes(date.getDay());
-
   }
 
   updateSummary();
 
-  document.getElementById("serviceHint").textContent =
-    selectedService.name;
+  const hint = document.getElementById("serviceHint");
+  if(hint && selectedService) {
+    hint.textContent = selectedService.name;
+  }
 
+  // ABRE IMEDIATAMENTE O POPUP COM OS HORÁRIOS DISPONÍVEIS E CONFIRMAÇÃO
+  openQuickBookingModal();
 }
 
 
@@ -3259,42 +3493,47 @@ function formatDateLong(dateStr){
 
 
 /* =========================================================
-   DATES
+   DATES DINÂMICAS (RESPEITANDO HORÁRIOS E DIAS BLOQUEADOS)
 ========================================================= */
 
 function getAvailableDates(){
 
   const dates = [];
-
   const today = new Date();
-
   today.setHours(0,0,0,0);
 
   let cursor = 0;
 
-  while(
-    dates.length < 7 &&
-    cursor < 30
-  ){
+  while(dates.length < 14 && cursor < 45){
 
-    const date =
-      new Date(today);
-
-    date.setDate(
-      today.getDate() + cursor
-    );
-
+    const date = new Date(today);
+    date.setDate(today.getDate() + cursor);
     cursor++;
 
-    /*
-      Sunday closed.
-    */
-    if(date.getDay() === 0){
+    const dayOfWeek = date.getDay();
+    const dateStr = toLocalISO(date);
+
+    // Domingo fechado (a menos que configurado ativo)
+    if(dayOfWeek === 0 && scheduleConfig.domingo_ativo !== "Sim"){
+      continue;
+    }
+
+    // Sábado fechado se inativo
+    if(dayOfWeek === 6 && scheduleConfig.sabado_ativo === "Não"){
+      continue;
+    }
+
+    // Segunda a Sexta se inativo
+    if(dayOfWeek >= 1 && dayOfWeek <= 5 && scheduleConfig.seg_sex_ativo === "Não"){
+      continue;
+    }
+
+    // Pula se o dia inteiro estiver bloqueado no painel pela Michelly
+    if(blockedDays.has(dateStr)){
       continue;
     }
 
     dates.push(date);
-
   }
 
   return dates;
@@ -3413,41 +3652,82 @@ function selectDate(
 
 
 /* =========================================================
+   CÁLCULO DINÂMICO DE HORÁRIOS DISPONÍVEIS
+========================================================= */
+
+function getAvailableHoursForDate(dateStr, dayOfWeek){
+  if(!dateStr) return [];
+
+  let horaInicio = scheduleConfig.seg_sex_inicio || "09:00";
+  let horaFim = scheduleConfig.seg_sex_fim || "18:00";
+
+  // Se for sábado
+  if(dayOfWeek === 6){
+    horaInicio = scheduleConfig.sabado_inicio || "09:00";
+    horaFim = scheduleConfig.sabado_fim || "13:00";
+  }
+
+  const startH = parseInt(horaInicio.split(":")[0], 10) || 9;
+  const endH = parseInt(horaFim.split(":")[0], 10) || 18;
+
+  const almocoAtivo = scheduleConfig.almoco_ativo !== "Não";
+  const almocoInicioH = almocoAtivo && scheduleConfig.almoco_inicio ? parseInt(scheduleConfig.almoco_inicio.split(":")[0], 10) : -1;
+  const almocoFimH = almocoAtivo && scheduleConfig.almoco_fim ? parseInt(scheduleConfig.almoco_fim.split(":")[0], 10) : -1;
+
+  const now = new Date();
+  const hojeIso = toLocalISO(now);
+  const horaAtual = now.getHours();
+
+  const horarios = [];
+  for(let h = startH; h <= endH; h++){
+    // Pula intervalo de almoço
+    if(almocoAtivo && h >= almocoInicioH && h < almocoFimH){
+      continue;
+    }
+
+    const timeStr = `${String(h).padStart(2, "0")}:00`;
+
+    // Se for hoje, pula horas que já passaram
+    if(dateStr === hojeIso && h <= horaAtual){
+      continue;
+    }
+
+    // Pula se horário estiver bloqueado pontualmente no painel
+    const slotKey = `${dateStr}_${timeStr}`;
+    if(blockedTimes.has(slotKey)){
+      continue;
+    }
+
+    // Pula se já houver agendamento confirmado/pendente (evita choque de horário)
+    if(bookedSlots.has(slotKey)){
+      continue;
+    }
+
+    horarios.push(timeStr);
+  }
+
+  return horarios;
+}
+
+
+/* =========================================================
    TIMES
 ========================================================= */
 
 function renderTimes(dayOfWeek){
 
-  /*
-    Current salon schedule.
-    This can later be connected to the
-    admin/calendar system.
-  */
-
-  let horarios = [
-    "09:00",
-    "10:00",
-    "11:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00"
-  ];
-
-
-  if(dayOfWeek === 6){
-
-    horarios = [
-      "09:00",
-      "10:00",
-      "11:00",
-      "12:00",
-      "13:00"
-    ];
-
+  if (!selectedDateStr) {
+    timeGrid.innerHTML = '<div class="empty-state">Primeiro escolha um dia para ver os horários disponíveis.</div>';
+    return;
   }
 
+  const horarios = getAvailableHoursForDate(selectedDateStr, dayOfWeek);
+
+  if (horarios.length === 0) {
+    timeGrid.innerHTML = '<div class="empty-state">Nenhum horário disponível para esta data. Escolha outro dia.</div>';
+    document.getElementById("timeHint").textContent = "Sem horários";
+    return;
+  }
 
   timeGrid.innerHTML =
     horarios.map(time => {
@@ -3477,6 +3757,218 @@ function renderTimes(dayOfWeek){
     "Horários disponíveis";
 
 }
+
+
+/* =========================================================
+   MODAL DE AGENDAMENTO RÁPIDO (POPUP AO ESCOLHER SERVIÇO)
+========================================================= */
+
+function openQuickBookingModal() {
+  if (!selectedService) return;
+
+  const modal = document.getElementById("modalQuickBooking");
+  document.getElementById("quickServiceTitle").textContent = selectedService.name;
+  
+  const price = selectedService.price > 0 ? BRL.format(selectedService.price) : "A consultar";
+  document.getElementById("quickServiceMeta").textContent = `${price} · Duração: ${selectedService.duration}`;
+
+  // Se nenhuma data foi escolhida, seleciona a primeira data disponível
+  const availableDates = getAvailableDates();
+  if (!selectedDateStr && availableDates.length > 0) {
+    selectedDateStr = toLocalISO(availableDates[0]);
+  }
+
+  renderQuickDates();
+  renderQuickTimes();
+
+  modal.classList.add("active");
+  document.body.classList.add("modal-open");
+}
+
+function closeQuickBookingModal() {
+  const modal = document.getElementById("modalQuickBooking");
+  modal.classList.remove("active");
+  document.body.classList.remove("modal-open");
+}
+
+function renderQuickDates() {
+  const scroll = document.getElementById("quickDateScroll");
+  const dates = getAvailableDates();
+
+  scroll.innerHTML = dates.map(date => {
+    const dateStr = toLocalISO(date);
+    const active = selectedDateStr === dateStr ? "active" : "";
+    const dayName = new Intl.DateTimeFormat("pt-BR", { weekday: "short" }).format(date).replace(".", "");
+
+    return `
+      <button
+        type="button"
+        class="date-card ${active}"
+        onclick="selectQuickDate('${dateStr}', ${date.getDay()})"
+        aria-pressed="${active ? "true" : "false"}"
+      >
+        <span class="date-day">${dayName}</span>
+        <span class="date-number">${date.getDate()}</span>
+      </button>
+    `;
+  }).join("");
+
+  const hintEl = document.getElementById("quickDateHint");
+  if (hintEl && selectedDateStr) {
+    hintEl.textContent = formatDateLong(selectedDateStr);
+  }
+}
+
+function selectQuickDate(dateStr, dayOfWeek) {
+  selectedDateStr = dateStr;
+  selectedTime = null;
+  renderQuickDates();
+  renderQuickTimes();
+
+  // Sincroniza também com o seletor da página
+  renderDates();
+  renderTimes(dayOfWeek);
+  updateSummary();
+}
+
+function renderQuickTimes() {
+  const grid = document.getElementById("quickTimeGrid");
+  const hintEl = document.getElementById("quickTimeHint");
+
+  if (!selectedDateStr) {
+    grid.innerHTML = '<div class="empty-state" style="padding:14px;">Escolha uma data acima para ver os horários.</div>';
+    if (hintEl) hintEl.textContent = "Selecione uma data";
+    return;
+  }
+
+  const date = parseDate(selectedDateStr);
+  const horarios = getAvailableHoursForDate(selectedDateStr, date.getDay());
+
+  if (horarios.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="padding:14px;">Nenhum horário livre nesta data. Por favor escolha outro dia.</div>';
+    if (hintEl) hintEl.textContent = "Sem horários livres";
+    return;
+  }
+
+  grid.innerHTML = horarios.map(time => {
+    const active = selectedTime === time ? "active" : "";
+    return `
+      <button
+        type="button"
+        class="time-slot ${active}"
+        onclick="selectQuickTime('${time}')"
+        aria-pressed="${active ? "true" : "false"}"
+      >
+        ${time}
+      </button>
+    `;
+  }).join("");
+
+  if (hintEl) {
+    hintEl.textContent = selectedTime ? `✓ Horário: ${selectedTime}` : "Toque no horário desejado";
+  }
+}
+
+function selectQuickTime(time) {
+  selectedTime = time;
+  selectTime(time); // Sincroniza com a página
+  renderQuickTimes();
+
+  // Foco no nome para acelerar a confirmação
+  const nameInput = document.getElementById("quickName");
+  if (nameInput && !nameInput.value) {
+    setTimeout(() => nameInput.focus(), 150);
+  }
+}
+
+async function confirmarAgendamentoRapido(event) {
+  event.preventDefault();
+
+  if (!selectedService) {
+    alert("Por favor, selecione um serviço.");
+    return;
+  }
+
+  if (!selectedDateStr) {
+    alert("Por favor, selecione uma data.");
+    return;
+  }
+
+  if (!selectedTime) {
+    alert("Por favor, selecione um horário disponível acima.");
+    return;
+  }
+
+  const name = document.getElementById("quickName").value.trim();
+  const phone = document.getElementById("quickPhone").value.trim();
+  const payment = document.getElementById("quickPayment").value;
+
+  if (!name) {
+    alert("Informe seu nome completo.");
+    document.getElementById("quickName").focus();
+    return;
+  }
+
+  if (!phone || phone.length < 8) {
+    alert("Informe seu WhatsApp com DDD.");
+    document.getElementById("quickPhone").focus();
+    return;
+  }
+
+  const btnConfirm = document.getElementById("btnQuickConfirm");
+  btnConfirm.disabled = true;
+  btnConfirm.textContent = "Registrando reserva...";
+
+  const dateStr = formatDateShort(selectedDateStr);
+  const dateLong = formatDateLong(selectedDateStr);
+  const price = selectedService.price > 0 ? BRL.format(selectedService.price) : "A consultar";
+
+  // 1. Grava diretamente no Google Sheets do Salão
+  try {
+    const payload = {
+      action: "create_booking",
+      client: name,
+      phone: phone,
+      service: selectedService.name,
+      date: `${dateLong} (${dateStr})`,
+      time: selectedTime,
+      paymentMethod: payment,
+      notes: "Agendamento rápido via site",
+      price: price
+    };
+
+    await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.warn("Aviso: Falha temporária na rede ao salvar na planilha:", err);
+  }
+
+  // 2. Preenche os dados no modal de confirmação
+  document.getElementById("modalClient").textContent = name;
+  document.getElementById("modalService").textContent = selectedService.name;
+  document.getElementById("modalDateTime").textContent = `${dateLong} às ${selectedTime}`;
+  document.getElementById("modalPrice").textContent = price;
+  document.getElementById("modalPayment").textContent = payment;
+
+  // 3. Fecha o popup rápido e abre o modal de confirmação
+  closeQuickBookingModal();
+  btnConfirm.disabled = false;
+  btnConfirm.textContent = "Confirmar Agendamento →";
+
+  openModal();
+}
+
+// Fechamento no clique fora do popup rápido
+document
+  .getElementById("modalQuickBooking")
+  .addEventListener("click", function(event){
+    if(event.target === this){
+      closeQuickBookingModal();
+    }
+  });
 
 
 function selectTime(time){
@@ -3591,31 +4083,19 @@ function formatDateShort(dateStr){
 function isBookingReady(){
 
   if(!selectedService){
-
     alert("Escolha um serviço.");
-
     return false;
-
   }
-
 
   if(!selectedDateStr){
-
     alert("Escolha uma data.");
-
     return false;
-
   }
-
 
   if(!selectedTime){
-
     alert("Escolha um horário.");
-
     return false;
-
   }
-
 
   const name =
     document
@@ -3623,39 +4103,27 @@ function isBookingReady(){
       .value
       .trim();
 
-
   const phone =
     document
       .getElementById("clientPhone")
       .value
       .trim();
 
-
   if(!name){
-
-    alert("Informe seu nome.");
-
+    alert("Informe seu nome completo.");
     document
       .getElementById("clientName")
       .focus();
-
     return false;
-
   }
 
-
-  if(!phone){
-
-    alert("Informe seu WhatsApp.");
-
+  if(!phone || phone.length < 8){
+    alert("Informe seu WhatsApp com DDD.");
     document
       .getElementById("clientPhone")
       .focus();
-
     return false;
-
   }
-
 
   return true;
 
@@ -3663,106 +4131,80 @@ function isBookingReady(){
 
 
 /* =========================================================
-   FORM SUBMISSION
+   SUBMISSÃO DO FORMULÁRIO (GRAVAÇÃO DIRETA NA PLANILHA)
 ========================================================= */
 
-bookingForm.addEventListener(
-  "submit",
-  function(event){
+bookingForm.addEventListener("submit", async function(event){
 
     event.preventDefault();
-
 
     if(!isBookingReady()){
       return;
     }
 
+    // Feedback visual nos botões
+    btnConfirm.disabled = true;
+    btnConfirm.textContent = "Registrando reserva...";
+    mobileBookButton.textContent = "Registrando...";
 
-    const name =
-      document
-        .getElementById("clientName")
-        .value
-        .trim();
+    const name = document.getElementById("clientName").value.trim();
+    const phone = document.getElementById("clientPhone").value.trim();
+    const notes = document.getElementById("clientNotes").value.trim();
+    const payment = document.getElementById("paymentMethod").value;
 
+    const dateStr = formatDateShort(selectedDateStr);
+    const dateLong = formatDateLong(selectedDateStr);
+    const price = selectedService.price > 0 ? BRL.format(selectedService.price) : "A consultar";
 
-    const phone =
-      document
-        .getElementById("clientPhone")
-        .value
-        .trim();
-
-
-    const notes =
-      document
-        .getElementById("clientNotes")
-        .value
-        .trim();
-
-
-    const date =
-      formatDateLong(selectedDateStr);
-
-
-    const price =
-      selectedService.price > 0
-        ? BRL.format(selectedService.price)
-        : "A consultar";
-
-
-    document.getElementById("modalService")
-      .textContent =
-        selectedService.name;
-
-
-    document.getElementById("modalDateTime")
-      .textContent =
-        `${date} · ${selectedTime} · ${price}`;
-
-
-    const notesText =
-      notes
-        ? `\n📝 *Observação:* ${notes}\n`
-        : "";
-
-
-    const message =
-
-`Olá Salão Michelly! ✨
-
-Gostaria de solicitar um agendamento.
-
-👤 *Nome:* ${name}
-📱 *WhatsApp:* ${phone}
-💇 *Serviço:* ${selectedService.name}
-📅 *Data:* ${date}
-⏰ *Horário:* ${selectedTime}
-💰 *Valor:* ${price}
-${notesText}
-Aguardo a confirmação do meu horário! 💕`;
-
-
-    const waUrl =
-      `https://api.whatsapp.com/send?phone=${salaoPhone}&text=${encodeURIComponent(message)}`;
-
-
-    document.getElementById("btnSendWhatsapp")
-      .onclick = function(){
-
-        window.open(
-          waUrl,
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-        closeModal();
-
+    // 1. Grava diretamente no Google Sheets do Salão
+    try {
+      const payload = {
+        action: "create_booking",
+        client: name,
+        phone: phone,
+        service: selectedService.name,
+        date: `${dateLong} (${dateStr})`, 
+        time: selectedTime,
+        paymentMethod: payment,
+        notes: notes,
+        price: price
       };
 
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.warn("Aviso: Falha temporária na rede ao salvar na planilha:", err);
+    }
 
+    // 2. Preenche os dados claros no Modal de Confirmação
+    document.getElementById("modalClient").textContent = name;
+    document.getElementById("modalService").textContent = selectedService.name;
+    document.getElementById("modalDateTime").textContent = `${dateLong} às ${selectedTime}`;
+    document.getElementById("modalPrice").textContent = price;
+    document.getElementById("modalPayment").textContent = payment;
+
+    // 3. Abre o modal informando que a reserva está garantida
     openModal();
+});
 
-  }
-);
+function concluirAgendamento(){
+    closeModal();
+
+    // Reset formulário após conclusão
+    bookingForm.reset();
+    selectedService = null;
+    selectedTime = null;
+    selectedDateStr = null;
+    renderServices();
+    renderDates();
+    document.getElementById("timeGrid").innerHTML = '<div class="empty-state">Primeiro escolha um dia para ver os horários disponíveis.</div>';
+    updateSummary();
+    btnConfirm.textContent = "Confirmar Agendamento →";
+    mobileBookButton.textContent = "Confirmar Reserva";
+}
 
 
 /* =========================================================
@@ -3770,84 +4212,47 @@ Aguardo a confirmação do meu horário! 💕`;
 ========================================================= */
 
 function openModal(){
-
-  const modal =
-    document.getElementById("modalSuccess");
-
+  const modal = document.getElementById("modalSuccess");
   modal.classList.add("active");
-
   document.body.classList.add("modal-open");
-
 }
-
 
 function closeModal(){
-
-  const modal =
-    document.getElementById("modalSuccess");
-
+  const modal = document.getElementById("modalSuccess");
   modal.classList.remove("active");
-
   document.body.classList.remove("modal-open");
 
+  // Restaura botões
+  const ready = Boolean(selectedService && selectedDateStr && selectedTime);
+  btnConfirm.disabled = !ready;
+  btnConfirm.textContent = "Confirmar Agendamento →";
+  mobileBookButton.textContent = "Confirmar Reserva";
 }
-
-
-document
-  .getElementById("modalClose")
-  .addEventListener(
-    "click",
-    closeModal
-  );
-
 
 document
   .getElementById("modalSuccess")
-  .addEventListener(
-    "click",
-    function(event){
-
-      if(event.target === this){
-
-        closeModal();
-
-      }
-
+  .addEventListener("click", function(event){
+    if(event.target === this){
+      concluirAgendamento();
     }
-  );
+  });
 
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    if(event.key === "Escape"){
-
-      closeModal();
-
-    }
-
+document.addEventListener("keydown", function(event){
+  if(event.key === "Escape"){
+    closeQuickBookingModal();
+    concluirAgendamento();
   }
-);
+});
 
 
 /* =========================================================
    MOBILE BOOKING BUTTON
 ========================================================= */
 
-mobileBookButton.addEventListener(
-  "click",
-  function(){
-
-    const booking =
-      document.getElementById("agendar");
-
-    booking.scrollIntoView({
-      behavior:"smooth"
-    });
-
-  }
-);
+mobileBookButton.addEventListener("click", function(){
+  const booking = document.getElementById("agendar");
+  booking.scrollIntoView({ behavior:"smooth" });
+});
 
 
 /* =========================================================
@@ -3856,26 +4261,15 @@ mobileBookButton.addEventListener(
 
 document
   .getElementById("datePrev")
-  .addEventListener(
-    "click",
-    function(){
-
-      moveDates(-1);
-
-    }
-  );
-
+  .addEventListener("click", function(){
+    moveDates(-1);
+  });
 
 document
   .getElementById("dateNext")
-  .addEventListener(
-    "click",
-    function(){
-
-      moveDates(1);
-
-    }
-  );
+  .addEventListener("click", function(){
+    moveDates(1);
+  });
 
 
 /* =========================================================
@@ -3883,18 +4277,15 @@ document
 ========================================================= */
 
 document.getElementById("currentYear")
-  .textContent =
-    new Date().getFullYear();
+  .textContent = new Date().getFullYear();
 
 
 /* =========================================================
    INITIALIZE
 ========================================================= */
 
-renderServices();
-
+carregarServicosAPI(); 
 renderDates();
-
 updateSummary();
 
 </script>
